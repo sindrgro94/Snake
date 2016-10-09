@@ -47,7 +47,7 @@ public:
     //getFunctions:
     pair<int,int> getSnakeHeadCoord();
     list<pair<int,int>> getSnakeTailCoord();
-    
+    bool didSnakeCollide(int boardWidth,int boardHeight);
     void printSnakeStuff()const;
 };
 class Board : public Snake{
