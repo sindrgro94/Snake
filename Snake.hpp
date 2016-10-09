@@ -8,38 +8,22 @@ enum Direction {RIGHT,LEFT,UP,DOWN};
 
 class BodyPart{
 private:
-    int _row,_column;
-    int** body;
-    int bodySize;
-    list<Direction> DirectionList;
-    Direction snakeHeadDirection;
-    bool isLast;
+    int _x,_y;
+    pair<Direction,Direction> _dir;
+    bool _isLast;
 public:
-    friend Snake;
-    BodyPart(int size,Direction dir,int col,int row);
-    BodyPart(int size,Direction dir,int col,int row,bool isLast);
-    ~BodyPart();
-    bool allFilled()const;
-    bool allEmpty()const;
-    //filling with a direction:
-    void fillAll(Direction dir);
-    //returns true if the specific row/col is empty:
-    bool isRowEmpty(int row)const;
-    bool isColEmpty(int col)const;
-    //returns true if allEmpty:
-    bool emptyRow(int row);
-    bool emptyCol(int col);
-    //returns true if allFilled:
-    bool fillRow(int row,Direction dir);
-    bool fillCol(int col,Direction dir);
-    //returns true if bodyPart is empty/full:
-    bool removeAPart();
-    bool addAPart(Direction dir);
-    bool addAPart(Direction dir, Direction newDir);
+    BodyPart(pair<Direction,Direction> dir,int y,int col,bool isLast);
     //getFunctions:
-    int getRow()const{return _row;}
-    int getColumn()const{return _column;}
-    bool snakeIsHere(int row,int col)const;
+    int getY(){return _y;}
+    int getX(){return _x;}
+    pair<Direction,Direction> getDir(){return _dir;}
+    bool isLast(){return _isLast;}
+    //setFunctions:
+    void setLast(){_isLast = true;}
+    void changeY(int change){_y += change;}
+    void changeX(int change){_x += change;}
+    void changeDir(pair<Direction,Direction> dir){_dir = dir;}
+    
 };
 
 
@@ -48,9 +32,9 @@ private:
     //snake<width,height>
     BodyPart* snakeHead;
     list<BodyPart*> snakeTail;
-    int snakeSize;
-    int snakeLength;
-    list<int> eatenFood;
+    int _snakeSize;
+    int _snakeLength;
+    bool _eatenFood;
     
 public:
     Snake(int snakeSize);
@@ -60,10 +44,11 @@ public:
     void removeLastTail();
     void straightForwardMove();
     void turnAndMove(list<Direction> &moveQueue);
-    BodyPart* prepareForTurn(Direction newDir);
-    BodyPart* makeTurnBodyPart(Direction dir, Direction newDir);
+    //getFunctions:
+    pair<int,int> getSnakeHeadCoord();
+    list<pair<int,int>> getSnakeTailCoord();
     
-    void printStuff()const;
+    void printSnakeStuff()const;
 };
 class Board : public Snake{
 private:
@@ -72,4 +57,5 @@ private:
 public:
     Board(int boardWidth,int boardHeight,int snakeSize);
 };
+void printStuff(list<pair<int,int> > snakeTailCoords);
 

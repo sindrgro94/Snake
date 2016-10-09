@@ -42,9 +42,9 @@ const sf::Color snakeHead_color = sf::Color::Red;
 const sf::Color snakeTail_color = sf::Color::Green;
 const sf::Color board_color = sf::Color::Black;
 const int tile_size = 52;
-const int WINDOW_WIDTH = 800;
-const int WINDOW_HEIGHT = 600;
-const int SNAKE_SIZE = 10;
+const int WINDOW_WIDTH = 800*2;
+const int WINDOW_HEIGHT = 600*2;
+const int SNAKE_SIZE = 50;
 
 
 int main(){
@@ -66,12 +66,6 @@ int main(){
     
     //start the game loop:
     while (window.isOpen()){
-        //controls the speed:
-        clock.restart();
-        time = clock.getElapsedTime();
-        while(time.asMilliseconds()<30){
-            time = clock.getElapsedTime();
-        }
         // Process events
         sf::Event event;
         while (window.pollEvent(event)){
@@ -85,61 +79,51 @@ int main(){
                             window.close();
                             break;
                         case sf::Keyboard::Down:
-                            moveQueue.push_front(DOWN);
+                            moveQueue.push_back(DOWN);
                             break;
                         case sf::Keyboard::Up:
-                            moveQueue.push_front(UP);
+                            moveQueue.push_back(UP);
                             break;
                         case sf::Keyboard::Left:
-                            moveQueue.push_front(LEFT);
+                            moveQueue.push_back(LEFT);
                             break;
                         case sf::Keyboard::Right:
-                            moveQueue.push_front(RIGHT);
+                            moveQueue.push_back(RIGHT);
                             break;
                     }
             }
         }
-        // Clear screen
-        window.clear();
-        board.moveSnake(moveQueue);
-        // Drawing the snake:
-        // (snake<snakeHead,snakeTail>)
-        pair<BodyPart*,list<BodyPart*>> snake = board.getSnake();
-        //printing the head:
-        sf::RectangleShape rect(sf::Vector2f(1,1));
-        rect.setFillColor(snakeHead_color);
-        cornerColumn = snake.first->getColumn();
-        cornerRow = snake.first->getRow();
-        for(int row = 0; row<SNAKE_SIZE;row++){
-            for (int col = 0; col<SNAKE_SIZE;col++){
-                if (snake.first->snakeIsHere(row,col)){
-                    rect.setPosition(cornerColumn+col,cornerRow+row);
-                    window.draw(rect);
-                }
+        time = clock.getElapsedTime();
+        if(time.asMilliseconds()>=600){
+            clock.restart();
+            // Clear screen
+            window.clear();
+            board.moveSnake(moveQueue);
+            // Drawing the snake:
+            pair<BodyPart*,list<BodyPart*>> snake = board.getSnake();
+            //printing the head:
+            sf::RectangleShape part(sf::Vector2f(SNAKE_SIZE,SNAKE_SIZE));
+            part.setFillColor(snakeHead_color);
+            pair<int,int> snakeHeadCoord = board.getSnakeHeadCoord();
+            part.setPosition(snakeHeadCoord.second,snakeHeadCoord.first);
+            window.draw(part);
+            //printing the tail:
+            list<pair<int,int> > snakeTailCoords;
+            list<pair<int,int> >::iterator snakeTailIt;
+            part.setFillColor(snakeTail_color);
+            snakeTailCoords = board.getSnakeTailCoord();
+            for(snakeTailIt = snakeTailCoords.begin(); snakeTailIt!=snakeTailCoords.end(); snakeTailIt++){
+                part.setPosition(snakeTailIt->second, snakeTailIt->first);
+                window.draw(part);
             }
+                
+                
+            // Draw the string
+            window.draw(text);
+        
+            // Update the window
+            window.display();
         }
-        //printing the tail:
-        list<BodyPart*>::iterator snakeTailIt;
-        rect.setFillColor(snakeTail_color);
-        for(snakeTailIt = snake.second.begin(); snakeTailIt!=snake.second.end();snakeTailIt++){
-            cornerColumn = (*snakeTailIt)->getColumn();
-            cornerRow = (*snakeTailIt)->getRow();
-            for(int row = 0; row<SNAKE_SIZE;row++){
-                for (int col = 0; col<SNAKE_SIZE;col++){
-                    if ((*snakeTailIt)->snakeIsHere(row,col)){
-                        rect.setPosition(cornerColumn+col, cornerRow+row);
-                        window.draw(rect);
-                    }
-                }
-            }
-        }
-        
-        
-        // Draw the string
-        window.draw(text);
-        
-        // Update the window
-        window.display();
     }
     
     return EXIT_SUCCESS;
