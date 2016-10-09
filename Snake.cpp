@@ -128,7 +128,6 @@ list<pair<int,int>> Snake::getSnakeTailCoord(){
 }
 
 void Snake::printSnakeStuff()const{
-    cout<<snakeHead->getDir().first<<endl;
     }
 /////////////////BOARD////////////////////////////
 Board::Board(int boardWidth,int boardHeight,int snakeSize) :width(boardWidth),height(boardHeight),Snake(snakeSize){}
