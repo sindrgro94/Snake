@@ -6,6 +6,24 @@ using namespace std;
 class Snake;
 enum Direction {RIGHT,LEFT,UP,DOWN};
 
+class Food{
+private:
+    int _x,_y;
+    int _value;
+    int _size;
+    int _speed;
+    bool _specialFood;
+public:
+    Food(int x, int y, int value, int size, int speed,bool specialFood);
+    //getFunctions:
+    int getY(){return _y;}
+    int getX(){return _x;}
+    int getFoodSize(){return _size;}
+    int getFoodValue(){return _value;}
+    bool isSpecialFood(){return _specialFood;}
+    
+};
+
 class BodyPart{
 private:
     int _x,_y;
@@ -34,12 +52,11 @@ private:
     list<BodyPart*> snakeTail;
     int _snakeSize;
     int _snakeLength;
-    bool _eatenFood;
+    int _eatenFood;
     
 public:
     Snake(int snakeSize);
     bool IllegalTurn(Direction dir);
-    void moveSnake(list<Direction> &moveQueue);
     pair<BodyPart*,list<BodyPart*>> getSnake(){return make_pair(snakeHead,snakeTail);};
     void removeLastTail();
     void straightForwardMove();
@@ -47,15 +64,32 @@ public:
     //getFunctions:
     pair<int,int> getSnakeHeadCoord();
     list<pair<int,int>> getSnakeTailCoord();
+    int getSnakeSize(){return _snakeSize;}
+    int getEatenFood(){return _eatenFood;}
+    //ChangeFunctions:
+    void changeEatenFood(int value){_eatenFood += value;}
+    void changeSnakeLength(int value){_snakeLength += value;}
+    ////////
     bool didSnakeCollide(int boardWidth,int boardHeight);
+    bool foodCanNotBeHere(int x,int y,int foodSize);
     void printSnakeStuff()const;
 };
 class Board : public Snake{
 private:
     //The board:
     int width,height;
+    list<Food*> food;
 public:
     Board(int boardWidth,int boardHeight,int snakeSize);
+    //Food:
+    void placeFood(int value, int size, int speed,bool specialFood);
+    list<pair<int,int>> getFoodCoord();
+    list<Food*> getAllFood(){return food;}
+    //Snake:
+    void moveSnake(list<Direction> &moveQueue);
+    void didSnakeEat();
+    
+    
 };
 void printStuff();
 

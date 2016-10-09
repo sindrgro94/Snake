@@ -41,6 +41,7 @@ const sf::Color number_colors[9] = {
 const sf::Color snakeHead_color = sf::Color::Red;
 const sf::Color snakeTail_color = sf::Color::Green;
 const sf::Color board_color = sf::Color::Black;
+const sf::Color foodColor = sf::Color::Blue;
 const int tile_size = 52;
 const int WINDOW_WIDTH = 800*2;
 const int WINDOW_HEIGHT = 600*2;
@@ -101,23 +102,29 @@ int main(){
             board.moveSnake(moveQueue);
             // Drawing the snake:
             pair<BodyPart*,list<BodyPart*>> snake = board.getSnake();
-            //printing the head:
+            //Draw the head:
             sf::RectangleShape part(sf::Vector2f(SNAKE_SIZE,SNAKE_SIZE));
             part.setFillColor(snakeHead_color);
             pair<int,int> snakeHeadCoord = board.getSnakeHeadCoord();
             part.setPosition(snakeHeadCoord.second,snakeHeadCoord.first);
             window.draw(part);
-            //printing the tail:
-            list<pair<int,int> > snakeTailCoords;
-            list<pair<int,int> >::iterator snakeTailIt;
+            //Draw the tail:
+            list<pair<int,int> > coordinates;
+            list<pair<int,int> >::iterator coordinatesIt;
             part.setFillColor(snakeTail_color);
-            snakeTailCoords = board.getSnakeTailCoord();
-            for(snakeTailIt = snakeTailCoords.begin(); snakeTailIt!=snakeTailCoords.end(); snakeTailIt++){
-                part.setPosition(snakeTailIt->first, snakeTailIt->second);
+            coordinates = board.getSnakeTailCoord();
+            for(coordinatesIt = coordinates.begin(); coordinatesIt!=coordinates.end(); coordinatesIt++){
+                part.setPosition(coordinatesIt->first, coordinatesIt->second);
                 window.draw(part);
             }
-                
-                
+            //Draw the food WARNING!! SIZE IS STANDARD AT THE MOMENT!!
+            coordinates = board.getFoodCoord();
+            part.setFillColor(foodColor);
+            for(coordinatesIt = coordinates.begin(); coordinatesIt!=coordinates.end(); coordinatesIt++){
+                part.setPosition(coordinatesIt->first, coordinatesIt->second);
+                window.draw(part);
+            }
+
             // Draw the string
             window.draw(text);
         

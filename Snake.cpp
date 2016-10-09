@@ -6,10 +6,13 @@
 #include <stack>
 
 using namespace std;
+/////////////////FOOD////////////////////////////
+Food::Food(int x, int y, int value, int size, int speed, bool specialFood):_x(x),_y(y),_value(value),_size(size),_speed(speed),_specialFood(specialFood){}
+
 /////////////////BODYPART////////////////////////////
 BodyPart::BodyPart(pair<Direction,Direction> dir,int y,int x,bool isLast):_y(y),_x(x),_isLast(isLast),_dir(dir){}
 /////////////////SNAKE////////////////////////////
-Snake::Snake(int snakeSize) : _snakeSize(snakeSize),_snakeLength(5){
+Snake::Snake(int snakeSize) : _snakeSize(snakeSize),_snakeLength(5),_eatenFood(0){
     //Standard inital Values: length=5, direction=Right
     int startY = 100;
     int startX = 100;
@@ -41,29 +44,6 @@ bool Snake::IllegalTurn(Direction dir){
             break;
     }
     return false;
-}
-void Snake::moveSnake(list<Direction> &moveQueue){
-    //checks if the turn is illegal:
-    if (!moveQueue.empty() && this->IllegalTurn(moveQueue.front())){
-        moveQueue.pop_front();
-        this->moveSnake(moveQueue);
-        return;
-    }
-    //check if the snake should get longer or not:
-    if (_eatenFood){
-        _eatenFood = false;
-        _snakeLength++;
-    }
-    else{
-        this->removeLastTail();
-    }
-    //takes the different situations if we are moving forward or turning:
-    if (moveQueue.empty()){//No Turning here:
-        this->straightForwardMove();
-    }
-    else{//Here we make the turn:
-        this->turnAndMove(moveQueue);
-    }
 }
 void Snake::removeLastTail(){
     snakeTail.pop_back();
@@ -142,11 +122,87 @@ bool Snake::didSnakeCollide(int boardWidth,int boardHeight){
     }
     return false;
 }
+bool Snake::foodCanNotBeHere(int x,int y, int foodSize){//Have to check for other food as well!!
+    if(x < snakeHead->getX()+_snakeSize &&
+       x+foodSize > snakeHead->getX() &&
+       y < snakeHead->getY()+_snakeSize &&
+       y +foodSize > snakeHead->getY())
+        return true;
+
+    list<pair<int,int>> snakeCoord = this->getSnakeTailCoord();
+    list<pair<int,int>>::iterator coordIt;
+    for(coordIt = snakeCoord.begin(); coordIt != snakeCoord.end(); coordIt++){
+        if(x < coordIt->first+_snakeSize &&
+           x+foodSize > coordIt->first &&
+           y < coordIt->second+_snakeSize &&
+           y +foodSize > coordIt->second)
+            return true;
+    }
+    return false;
+
+}
+
 
 void Snake::printSnakeStuff()const{
     }
 /////////////////BOARD////////////////////////////
-Board::Board(int boardWidth,int boardHeight,int snakeSize) :width(boardWidth),height(boardHeight),Snake(snakeSize){}
+Board::Board(int boardWidth,int boardHeight,int snakeSize) :width(boardWidth),height(boardHeight),Snake(snakeSize){
+    this->placeFood(1,snakeSize,0,false);
+}
+void Board::placeFood(int value, int size, int speed,bool specialFood){
+    int x = rand()%width;
+    int y = rand()%height;
+    while (this->foodCanNotBeHere(x,y,size) || x+size>width || y+size>height){
+        x = rand()%width;
+        y = rand()%height;
+    }
+    Food* newFood;
+    newFood = new Food(x,y,value,size,speed,specialFood);
+    food.push_front(newFood);//MUST BE FRONT!
+}
+list<pair<int,int>> Board::getFoodCoord(){
+    list<Food*>::iterator foodIt;
+    list<pair<int,int>> retCoord;
+    for(foodIt = food.begin(); foodIt!=food.end(); foodIt++){
+        retCoord.push_back(make_pair((*foodIt)->getX(), (*foodIt)->getY()));
+    }
+    return retCoord;
+}
+void Board::moveSnake(list<Direction> &moveQueue){
+    //checks if the turn is illegal:
+    if (!moveQueue.empty() && this->IllegalTurn(moveQueue.front())){
+        moveQueue.pop_front();
+        this->moveSnake(moveQueue);
+        return;
+    }
+    //takes the different situations if we are moving forward or turning:
+    if (moveQueue.empty()){//No Turning here:
+        this->straightForwardMove();
+    }
+    else{//Here we make the turn:
+        this->turnAndMove(moveQueue);
+    }
+    //check if we have eaten:
+    this->didSnakeEat();
+    //check if the snake should get longer or not:
+    if (this->getEatenFood()){
+        this->changeEatenFood(-1);
+        this->changeSnakeLength(1);
+    }
+    else{
+        this->removeLastTail();
+    }
+}
+
+void Board::didSnakeEat(){
+    list<Food*>::iterator foodIt;
+    for(foodIt = food.begin(); foodIt != food.end(); foodIt++){
+        if (!foodCanNotBeHere((*foodIt)->getX(), (*foodIt)->getY(), (*foodIt)->getFoodSize()))
+            this->changeEatenFood((*foodIt)->getFoodValue());
+            if(!(*foodIt)->isSpecialFood())
+                this->placeFood(1,this->getSnakeSize(),0,false);
+    }
+}
 
 void printStuff(){
 
