@@ -57,5 +57,5 @@ private:
 public:
     Board(int boardWidth,int boardHeight,int snakeSize);
 };
-void printStuff(list<pair<int,int> > snakeTailCoords);
+void printStuff();
 

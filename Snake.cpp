@@ -133,10 +133,7 @@ void Snake::printSnakeStuff()const{
 /////////////////BOARD////////////////////////////
 Board::Board(int boardWidth,int boardHeight,int snakeSize) :width(boardWidth),height(boardHeight),Snake(snakeSize){}
 
-void printStuff(list<pair<int,int> > snakeTailCoords){
-    list<pair<int,int> >::iterator snakeTailIt;
-    for(snakeTailIt = snakeTailCoords.begin(); snakeTailIt!=snakeTailCoords.end(); snakeTailIt++){
-        cout<<"x: "<<snakeTailIt->second<<", y: "<<snakeTailIt->first<<endl;
-    }
+void printStuff(){
+
 }
 
