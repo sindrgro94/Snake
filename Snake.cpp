@@ -122,11 +122,26 @@ list<pair<int,int>> Snake::getSnakeTailCoord(){
     list<BodyPart*>::iterator snakeTailIt;
     list<pair<int,int>> retCoord;
     for(snakeTailIt = snakeTail.begin(); snakeTailIt!=snakeTail.end(); snakeTailIt++){
-        retCoord.push_back(make_pair((*snakeTailIt)->getY(), (*snakeTailIt)->getX()));
+        retCoord.push_back(make_pair((*snakeTailIt)->getX(), (*snakeTailIt)->getY()));
     }
     return retCoord;
 }
-
+bool Snake::didSnakeCollide(int boardWidth,int boardHeight){
+    int snakeHeadX = snakeHead->getX();
+    int snakeHeadY = snakeHead->getY();
+    if (snakeHeadX<0 || snakeHeadX+_snakeSize>boardWidth || snakeHeadY<0 ||snakeHeadY+_snakeSize>boardHeight)
+        return true;
+    list<pair<int,int>> snakeCoord = this->getSnakeTailCoord();
+    list<pair<int,int>>::iterator coordIt;
+    for(coordIt = snakeCoord.begin(); coordIt != snakeCoord.end(); coordIt++){
+        if(snakeHeadX < coordIt->first+_snakeSize &&
+           snakeHeadX+_snakeSize > coordIt->first &&
+           snakeHeadY < coordIt->second+_snakeSize &&
+           snakeHeadY +_snakeSize > coordIt->second)
+            return true;
+    }
+    return false;
+}
 
 void Snake::printSnakeStuff()const{
     }

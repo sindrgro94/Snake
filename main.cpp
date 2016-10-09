@@ -113,7 +113,7 @@ int main(){
             part.setFillColor(snakeTail_color);
             snakeTailCoords = board.getSnakeTailCoord();
             for(snakeTailIt = snakeTailCoords.begin(); snakeTailIt!=snakeTailCoords.end(); snakeTailIt++){
-                part.setPosition(snakeTailIt->second, snakeTailIt->first);
+                part.setPosition(snakeTailIt->first, snakeTailIt->second);
                 window.draw(part);
             }
                 
@@ -124,6 +124,8 @@ int main(){
             // Update the window
             window.display();
         }
+        if (board.didSnakeCollide(WINDOW_WIDTH, WINDOW_HEIGHT))
+            window.close();
     }
     
     return EXIT_SUCCESS;
