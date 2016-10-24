@@ -197,10 +197,13 @@ void Board::moveSnake(list<Direction> &moveQueue){
 void Board::didSnakeEat(){
     list<Food*>::iterator foodIt;
     for(foodIt = food.begin(); foodIt != food.end(); foodIt++){
-        if (!foodCanNotBeHere((*foodIt)->getX(), (*foodIt)->getY(), (*foodIt)->getFoodSize()))
+        if (foodCanNotBeHere((*foodIt)->getX(), (*foodIt)->getY(), (*foodIt)->getFoodSize())){
             this->changeEatenFood((*foodIt)->getFoodValue());
+            food.erase(foodIt);
             if(!(*foodIt)->isSpecialFood())
                 this->placeFood(1,this->getSnakeSize(),0,false);
+        }
+            
     }
 }
 

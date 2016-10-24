@@ -95,7 +95,7 @@ int main(){
             }
         }
         time = clock.getElapsedTime();
-        if(time.asMilliseconds()>=600){
+        if(time.asMilliseconds()>=260){
             clock.restart();
             // Clear screen
             window.clear();
