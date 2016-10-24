@@ -179,7 +179,7 @@ void Board::moveSnake(list<Direction> &moveQueue){
     if (moveQueue.empty()){//No Turning here:
         this->straightForwardMove();
     }
-    else{//Here we make the turn:
+    else{//Here we turn:
         this->turnAndMove(moveQueue);
     }
     //check if we have eaten:
@@ -196,18 +196,30 @@ void Board::moveSnake(list<Direction> &moveQueue){
 
 void Board::didSnakeEat(){
     list<Food*>::iterator foodIt;
+    int x = this->getSnakeHeadX();
+    int y = this->getSnakeHeadY();
+    bool eaten = false;
     for(foodIt = food.begin(); foodIt != food.end(); foodIt++){
-        if (foodCanNotBeHere((*foodIt)->getX(), (*foodIt)->getY(), (*foodIt)->getFoodSize())){
+        if (x < (*foodIt)->getX() + (*foodIt)->getFoodSize() &&
+            x + this->getSnakeSize() > (*foodIt)->getX() &&
+            y < (*foodIt)->getY()+ (*foodIt)->getFoodSize() &&
+            y + this->getSnakeSize() > (*foodIt)->getY()){
+            
+            cout<<&(*foodIt)<<endl;
+            cout<<food.size()<<endl;
+            printStuff(*foodIt);
             this->changeEatenFood((*foodIt)->getFoodValue());
             food.erase(foodIt);
             if(!(*foodIt)->isSpecialFood())
-                this->placeFood(1,this->getSnakeSize(),0,false);
+                eaten = true;
         }
-            
+    }
+    if (eaten){
+        this->placeFood(1,this->getSnakeSize(),0,false);
     }
 }
 
-void printStuff(){
-
+void printStuff(Food* food){
+    cout<<"x-koordinat: "<<food->getX()<<", y-koordinat: "<<food->getY()<<endl;
 }
 

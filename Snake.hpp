@@ -2,6 +2,7 @@
 #include<list>
 #include <utility>
 #include <queue>
+#include <iostream>
 using namespace std;
 class Snake;
 enum Direction {RIGHT,LEFT,UP,DOWN};
@@ -15,6 +16,7 @@ private:
     bool _specialFood;
 public:
     Food(int x, int y, int value, int size, int speed,bool specialFood);
+    ~Food(){cout<<"Destruktør kalt"<<endl;}
     //getFunctions:
     int getY(){return _y;}
     int getX(){return _x;}
@@ -62,6 +64,8 @@ public:
     void straightForwardMove();
     void turnAndMove(list<Direction> &moveQueue);
     //getFunctions:
+    int getSnakeHeadX(){return snakeHead->getX();}
+    int getSnakeHeadY(){return snakeHead->getY();}
     pair<int,int> getSnakeHeadCoord();
     list<pair<int,int>> getSnakeTailCoord();
     int getSnakeSize(){return _snakeSize;}
@@ -91,5 +95,5 @@ public:
     
     
 };
-void printStuff();
+void printStuff(Food* food);
 

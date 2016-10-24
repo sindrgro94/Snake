@@ -59,6 +59,8 @@ int main(){
     }
     sf::Text text("Hello SFML", font, 40);
     text.setColor(sf::Color::White);
+    //Loading images:
+    
     // Defining variables:
     sf::Clock clock;
     sf::Time time;
@@ -95,7 +97,7 @@ int main(){
             }
         }
         time = clock.getElapsedTime();
-        if(time.asMilliseconds()>=260){
+        if(time.asMilliseconds()>=120){
             clock.restart();
             // Clear screen
             window.clear();
