@@ -60,7 +60,12 @@ int main(){
     sf::Text text("Hello SFML", font, 40);
     text.setColor(sf::Color::White);
     //Loading images:
-    
+    sf::Texture snakeHeadImage;
+    sf::Sprite snakeDrawing;
+    if(!snakeHeadImage.loadFromFile("snakeHeadTest.png")){
+        cout<<"Could not load snake head image."<<endl;
+    }
+    snakeDrawing.setTexture(snakeHeadImage);
     // Defining variables:
     sf::Clock clock;
     sf::Time time;
@@ -129,6 +134,7 @@ int main(){
 
             // Draw the string
             window.draw(text);
+            window.draw(snakeDrawing);
         
             // Update the window
             window.display();
