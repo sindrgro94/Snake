@@ -19,6 +19,9 @@
 #include <SFML/Graphics.hpp>
 // lagt til selv:
 #include "Snake.hpp"
+#include "Board.hpp"
+#include "BodyPart.hpp"
+#include "Food.hpp"
 #include <cstdlib>
 #include <ctime>
 #include <iostream>
@@ -121,7 +124,7 @@ int main(){
                 window.draw(part);
             }
             else{
-                board.
+                
             }
             
            

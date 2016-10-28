@@ -1,51 +1,11 @@
 #pragma once
-#include<list>
+#include "BodyPart.hpp"
+#include "Food.hpp"
+#include <list>
 #include <utility>
 #include <queue>
 #include <iostream>
 using namespace std;
-class Snake;
-enum Direction {RIGHT,LEFT,UP,DOWN};
-
-class Food{
-private:
-    int _x,_y;
-    int _value;
-    int _size;
-    int _speed;
-    bool _specialFood;
-public:
-    Food(int x, int y, int value, int size, int speed,bool specialFood);
-    ~Food(){cout<<"Destruktør kalt"<<endl;}
-    //getFunctions:
-    int getY(){return _y;}
-    int getX(){return _x;}
-    int getFoodSize(){return _size;}
-    int getFoodValue(){return _value;}
-    bool isSpecialFood(){return _specialFood;}
-    
-};
-
-class BodyPart{
-private:
-    int _x,_y;
-    pair<Direction,Direction> _dir;
-    bool _isLast;
-public:
-    BodyPart(pair<Direction,Direction> dir,int y,int col,bool isLast);
-    //getFunctions:
-    int getY(){return _y;}
-    int getX(){return _x;}
-    pair<Direction,Direction> getDir(){return _dir;}
-    bool isLast(){return _isLast;}
-    //setFunctions:
-    void setLast(){_isLast = true;}
-    void changeY(int change){_y += change;}
-    void changeX(int change){_x += change;}
-    void changeDir(pair<Direction,Direction> dir){_dir = dir;}
-    
-};
-
 
 class Snake{
 private:
@@ -78,31 +38,6 @@ public:
     bool didSnakeCollide(int boardWidth,int boardHeight);
     bool foodCanNotBeHere(int x,int y,int foodSize);
     void printSnakeStuff()const;
-};
-class Board{
-private:
-    int width,height;
-    Snake* snake;
-    list<Food*> food;
-public:
-    Board(int boardWidth,int boardHeight,int snakeSize);
-    //Food:
-    void placeFood(int value, int size, int speed,bool specialFood);
-    list<pair<int,int>> getFoodCoord();
-    list<Food*> getAllFood(){return food;}
-    //Snake:
-    
-    //GetFunctions:
-    //pair<BodyPart*,list<BodyPart*>>getSnake(){return snake->getSnake();}
-    pair<int,int> getSnakeHeadCoord(){return snake->getSnakeHeadCoord();}
-    list<pair<int,int>> getSnakeTailCoord(){return snake->getSnakeTailCoord();}
-    Direction getSnakeHeadDirection(){return snake->getSnakeHeadDirection();}
-    ///
-    bool didSnakeCollide(int width,int height){return snake->didSnakeCollide(width, height);}
-    void moveSnake(list<Direction> &moveQueue);
-    void didSnakeEat();
-    
-    
 };
 void printStuff(Food* food);
 
