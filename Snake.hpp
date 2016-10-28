@@ -66,6 +66,7 @@ public:
     //getFunctions:
     int getSnakeHeadX(){return snakeHead->getX();}
     int getSnakeHeadY(){return snakeHead->getY();}
+    Direction getSnakeHeadDirection();
     pair<int,int> getSnakeHeadCoord();
     list<pair<int,int>> getSnakeTailCoord();
     int getSnakeSize(){return _snakeSize;}
@@ -78,10 +79,10 @@ public:
     bool foodCanNotBeHere(int x,int y,int foodSize);
     void printSnakeStuff()const;
 };
-class Board : public Snake{
+class Board{
 private:
-    //The board:
     int width,height;
+    Snake* snake;
     list<Food*> food;
 public:
     Board(int boardWidth,int boardHeight,int snakeSize);
@@ -90,6 +91,14 @@ public:
     list<pair<int,int>> getFoodCoord();
     list<Food*> getAllFood(){return food;}
     //Snake:
+    
+    //GetFunctions:
+    //pair<BodyPart*,list<BodyPart*>>getSnake(){return snake->getSnake();}
+    pair<int,int> getSnakeHeadCoord(){return snake->getSnakeHeadCoord();}
+    list<pair<int,int>> getSnakeTailCoord(){return snake->getSnakeTailCoord();}
+    Direction getSnakeHeadDirection(){return snake->getSnakeHeadDirection();}
+    ///
+    bool didSnakeCollide(int width,int height){return snake->didSnakeCollide(width, height);}
     void moveSnake(list<Direction> &moveQueue);
     void didSnakeEat();
     

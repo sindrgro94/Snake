@@ -51,7 +51,7 @@ const int SNAKE_SIZE = 50;
 int main(){
     srand(time(nullptr));
     Board board(WINDOW_WIDTH,WINDOW_HEIGHT,SNAKE_SIZE);
-    // Create the main window
+    //////// Create the main window/////////////////
     sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "SFML window",sf::Style::Default);
     sf::Font font;
     if (!font.loadFromFile("sansation.ttf")) {
@@ -59,14 +59,17 @@ int main(){
     }
     sf::Text text("Hello SFML", font, 40);
     text.setColor(sf::Color::White);
-    //Loading images:
+    /////////Loading images:////////////////////
+    //SnakeHead:
     sf::Texture snakeHeadImage;
-    sf::Sprite snakeDrawing;
+    sf::Sprite snakeHead;
+    bool haveSnakeHead = true;
     if(!snakeHeadImage.loadFromFile("snakeHeadTest.png")){
         cout<<"Could not load snake head image."<<endl;
+        haveSnakeHead = false;
     }
-    snakeDrawing.setTexture(snakeHeadImage);
-    // Defining variables:
+    snakeHead.setTexture(snakeHeadImage);
+    ////////Defining variables:////////////////
     sf::Clock clock;
     sf::Time time;
     list<Direction> moveQueue;
@@ -104,18 +107,26 @@ int main(){
         time = clock.getElapsedTime();
         if(time.asMilliseconds()>=120){
             clock.restart();
-            // Clear screen
+            ///////////////Clear screen///////////////
             window.clear();
             board.moveSnake(moveQueue);
-            // Drawing the snake:
-            pair<BodyPart*,list<BodyPart*>> snake = board.getSnake();
-            //Draw the head:
+            ///////////////Drawing the snake:///////////////
+            //pair<BodyPart*,list<BodyPart*>> snake = board.getSnake();
             sf::RectangleShape part(sf::Vector2f(SNAKE_SIZE,SNAKE_SIZE));
-            part.setFillColor(snakeHead_color);
+            ///////////////Draw the head:///////////////
             pair<int,int> snakeHeadCoord = board.getSnakeHeadCoord();
-            part.setPosition(snakeHeadCoord.second,snakeHeadCoord.first);
-            window.draw(part);
-            //Draw the tail:
+            if(!haveSnakeHead){
+                part.setFillColor(snakeHead_color);
+                part.setPosition(snakeHeadCoord.second,snakeHeadCoord.first);
+                window.draw(part);
+            }
+            else{
+                board.
+            }
+            
+           
+            
+            ///////////////Draw the tail:///////////////
             list<pair<int,int> > coordinates;
             list<pair<int,int> >::iterator coordinatesIt;
             part.setFillColor(snakeTail_color);
@@ -124,7 +135,7 @@ int main(){
                 part.setPosition(coordinatesIt->first, coordinatesIt->second);
                 window.draw(part);
             }
-            //Draw the food WARNING!! SIZE IS STANDARD AT THE MOMENT!!
+            ///////////////Draw the food WARNING!! SIZE IS STANDARD AT THE MOMENT!!
             coordinates = board.getFoodCoord();
             part.setFillColor(foodColor);
             for(coordinatesIt = coordinates.begin(); coordinatesIt!=coordinates.end(); coordinatesIt++){
@@ -134,7 +145,7 @@ int main(){
 
             // Draw the string
             window.draw(text);
-            window.draw(snakeDrawing);
+            window.draw(snakeHead);
         
             // Update the window
             window.display();
