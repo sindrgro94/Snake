@@ -66,10 +66,6 @@ void Board::didSnakeEat(){
             x + snake->getSnakeSize() > (*foodIt)->getX() &&
             y < (*foodIt)->getY()+ (*foodIt)->getFoodSize() &&
             y + snake->getSnakeSize() > (*foodIt)->getY()){
-            
-            cout<<&(*foodIt)<<endl;
-            cout<<food.size()<<endl;
-            printStuff(*foodIt);
             snake->changeEatenFood((*foodIt)->getFoodValue());
             food.erase(foodIt);
             if(!(*foodIt)->isSpecialFood())

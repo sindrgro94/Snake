@@ -21,8 +21,9 @@ public:
     //GetFunctions:
     //pair<BodyPart*,list<BodyPart*>>getSnake(){return snake->getSnake();}
     pair<int,int> getSnakeHeadCoord(){return snake->getSnakeHeadCoord();}
-    list<pair<int,int>> getSnakeTailCoord(){return snake->getSnakeTailCoord();}
+    list<pair<int,int>> getSnakeTailCoordAndDir(list<pair<Direction,Direction>> &dir){return snake->getSnakeTailCoordAndDir(dir);}
     Direction getSnakeHeadDirection(){return snake->getSnakeHeadDirection();}
+    int getSnakeSize(){return snake->getSnakeSize();}
     ///
     bool didSnakeCollide(int width,int height){return snake->didSnakeCollide(width, height);}
     void moveSnake(list<Direction> &moveQueue);

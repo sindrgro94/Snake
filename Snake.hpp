@@ -29,6 +29,7 @@ public:
     Direction getSnakeHeadDirection();
     pair<int,int> getSnakeHeadCoord();
     list<pair<int,int>> getSnakeTailCoord();
+    list<pair<int,int>> getSnakeTailCoordAndDir(list<pair<Direction,Direction>> &dir);
     int getSnakeSize(){return _snakeSize;}
     int getEatenFood(){return _eatenFood;}
     //ChangeFunctions:

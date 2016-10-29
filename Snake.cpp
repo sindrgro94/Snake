@@ -93,10 +93,21 @@ Direction Snake::getSnakeHeadDirection(){
     return (snakeHead->getDir()).first;
 }
 pair<int,int> Snake::getSnakeHeadCoord(){
-    return make_pair(snakeHead->getY(), snakeHead->getX());
+    return make_pair(snakeHead->getX(), snakeHead->getY());
 }
 list<pair<int,int>> Snake::getSnakeTailCoord(){
     list<BodyPart*>::iterator snakeTailIt;
+    list<pair<int,int>> retCoord;
+    for(snakeTailIt = snakeTail.begin(); snakeTailIt!=snakeTail.end(); snakeTailIt++){
+        retCoord.push_back(make_pair((*snakeTailIt)->getX(), (*snakeTailIt)->getY()));
+    }
+    return retCoord;
+}
+list<pair<int,int>> Snake::getSnakeTailCoordAndDir(list<pair<Direction,Direction>> &dir){
+    list<BodyPart*>::iterator snakeTailIt;
+    for(snakeTailIt = snakeTail.begin(); snakeTailIt!=snakeTail.end(); snakeTailIt++){
+        dir.push_back((*snakeTailIt)->getDir());
+    }
     list<pair<int,int>> retCoord;
     for(snakeTailIt = snakeTail.begin(); snakeTailIt!=snakeTail.end(); snakeTailIt++){
         retCoord.push_back(make_pair((*snakeTailIt)->getX(), (*snakeTailIt)->getY()));

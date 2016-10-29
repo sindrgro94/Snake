@@ -18,10 +18,8 @@
 #include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
 // lagt til selv:
-#include "Snake.hpp"
 #include "Board.hpp"
-#include "BodyPart.hpp"
-#include "Food.hpp"
+#include "Drawing.hpp"
 #include <cstdlib>
 #include <ctime>
 #include <iostream>
@@ -67,11 +65,29 @@ int main(){
     sf::Texture snakeHeadImage;
     sf::Sprite snakeHead;
     bool haveSnakeHead = true;
-    if(!snakeHeadImage.loadFromFile("snakeHeadTest.png")){
+    if(!snakeHeadImage.loadFromFile("snakeHeadTest1.png")){
         cout<<"Could not load snake head image."<<endl;
         haveSnakeHead = false;
     }
     snakeHead.setTexture(snakeHeadImage);
+    //SnakeTail:
+    sf::Texture snakeTailImage;
+    sf::Sprite snakeTail;
+    bool haveSnakeTail = true;
+    if(!snakeTailImage.loadFromFile("snakeTailTest.png")){
+        cout<<"Could not load snake tail image"<<endl;
+        haveSnakeTail = false;
+    }
+    snakeTail.setTexture(snakeTailImage);
+    //EndTail:
+    sf::Texture endTailImage;
+    sf::Sprite endTail;
+    bool haveEndTail = true;
+    if(!endTailImage.loadFromFile("endTailTest.png")){
+        cout<<"Could not load end tail image"<<endl;
+        haveEndTail = false;
+    }
+    endTail.setTexture(endTailImage);
     ////////Defining variables:////////////////
     sf::Clock clock;
     sf::Time time;
@@ -115,30 +131,13 @@ int main(){
             board.moveSnake(moveQueue);
             ///////////////Drawing the snake:///////////////
             //pair<BodyPart*,list<BodyPart*>> snake = board.getSnake();
-            sf::RectangleShape part(sf::Vector2f(SNAKE_SIZE,SNAKE_SIZE));
-            ///////////////Draw the head:///////////////
-            pair<int,int> snakeHeadCoord = board.getSnakeHeadCoord();
-            if(!haveSnakeHead){
-                part.setFillColor(snakeHead_color);
-                part.setPosition(snakeHeadCoord.second,snakeHeadCoord.first);
-                window.draw(part);
-            }
-            else{
-                
-            }
-            
-           
-            
-            ///////////////Draw the tail:///////////////
+            drawSnakeHead(window,haveSnakeHead, board, snakeHead, snakeHead_color);
+            drawSnakeTail(window,haveSnakeTail,haveEndTail,board,snakeTail,endTail,snakeTail_color);
+            ///////////////Draw the food WARNING!! SIZE IS STANDARD AT THE MOMENT!!
+            int snakeSize = board.getSnakeSize();
+            sf::RectangleShape part(sf::Vector2f(snakeSize,snakeSize));
             list<pair<int,int> > coordinates;
             list<pair<int,int> >::iterator coordinatesIt;
-            part.setFillColor(snakeTail_color);
-            coordinates = board.getSnakeTailCoord();
-            for(coordinatesIt = coordinates.begin(); coordinatesIt!=coordinates.end(); coordinatesIt++){
-                part.setPosition(coordinatesIt->first, coordinatesIt->second);
-                window.draw(part);
-            }
-            ///////////////Draw the food WARNING!! SIZE IS STANDARD AT THE MOMENT!!
             coordinates = board.getFoodCoord();
             part.setFillColor(foodColor);
             for(coordinatesIt = coordinates.begin(); coordinatesIt!=coordinates.end(); coordinatesIt++){
@@ -147,8 +146,7 @@ int main(){
             }
 
             // Draw the string
-            window.draw(text);
-            window.draw(snakeHead);
+            //window.draw(text);
         
             // Update the window
             window.display();
