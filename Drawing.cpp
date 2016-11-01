@@ -36,7 +36,6 @@ void drawSnakeTail(sf::RenderWindow &window,bool haveSnakeTail,bool haveEndTail,
     }
     else{
         list<pair<Direction,Direction>>::iterator dirIt;
-        //pair<int,int> tempCoord; //Tror ikke trengs
         coordinatesIt = coordinates.begin();
         for(dirIt = dir.begin(); dirIt!=dir.end(); dirIt++){
             snakeTail.setPosition(coordinatesIt->first,coordinatesIt->second);
@@ -76,5 +75,45 @@ void drawSnakeTail(sf::RenderWindow &window,bool haveSnakeTail,bool haveEndTail,
         }
         
         
+    }
+}
+void drawFood(sf::RenderWindow &window,bool haveNormalFood,bool haveSpecialFood, Board board, sf::Sprite normalFood, sf::Sprite specialFood,sf::Color foodColor){
+    //////WARNING! CAN ONLY PRINT FOOD IN SIZE SNAKESIZE
+    int snakeSize = board.getSnakeSize();
+    sf::RectangleShape part(sf::Vector2f(snakeSize,snakeSize));
+    list<pair<int,int> > coordinates;
+    list<pair<int,int> >::iterator coordinatesIt;
+    pair<list<NormalFood>,list<SpecialFood>> foodTypes;
+    list<NormalFood>::iterator foodTypeNIt;
+    list<SpecialFood>::iterator foodTypeSIt;
+    foodTypes = board.getFoodTypes();//<normal,special>
+    // Stationary food:
+    coordinates = board.getFoodCoord(false);//false for isSpecialFood()
+    part.setFillColor(foodColor);
+    for(coordinatesIt = coordinates.begin(),foodTypeNIt = foodTypes.first.begin(); coordinatesIt!=coordinates.end(); coordinatesIt++,foodTypeNIt++){
+        if(haveNormalFood){
+            normalFood.setTextureRect(sf::IntRect(0,*foodTypeNIt*snakeSize,snakeSize,snakeSize));
+            normalFood.setPosition(coordinatesIt->first, coordinatesIt->second);
+            window.draw(normalFood);
+
+        }
+        else{
+            part.setPosition(coordinatesIt->first, coordinatesIt->second);
+            window.draw(part);
+        }
+    }
+    
+    //moving Food:
+    coordinates = board.getFoodCoord(true);//true for isSpecialFood()
+    for(coordinatesIt = coordinates.begin(),foodTypeSIt = foodTypes.second.begin(); coordinatesIt!=coordinates.end(); coordinatesIt++,foodTypeSIt++){
+        if(haveSpecialFood){
+            specialFood.setTextureRect(sf::IntRect(0,*foodTypeSIt*snakeSize,snakeSize,snakeSize));
+            specialFood.setPosition(coordinatesIt->first, coordinatesIt->second);
+            window.draw(specialFood);
+        }
+        else{
+            part.setPosition(coordinatesIt->first, coordinatesIt->second);
+            window.draw(part);
+        }
     }
 }

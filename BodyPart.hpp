@@ -1,5 +1,5 @@
 #pragma once
-#include "Enum.hpp"
+#include "Food.hpp"
 #include <list>
 #include <utility>
 #include <queue>

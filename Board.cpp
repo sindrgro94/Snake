@@ -1,4 +1,3 @@
-
 #include "Board.hpp"
 #include <list>
 #include <utility>
@@ -9,9 +8,9 @@ using namespace std;
 /////////////////BOARD////////////////////////////
 Board::Board(int boardWidth,int boardHeight,int snakeSize) :width(boardWidth),height(boardHeight){
     snake = new Snake(snakeSize);
-    this->placeFood(1,snakeSize,0,false);
+    this->placeFood(snakeSize,false);
 }
-void Board::placeFood(int value, int size, int speed,bool specialFood){
+void Board::placeFood(int size, bool specialFood){
     int x = rand()%width;
     int y = rand()%height;
     while (snake->foodCanNotBeHere(x,y,size) || x+size>width || y+size>height){
@@ -19,16 +18,76 @@ void Board::placeFood(int value, int size, int speed,bool specialFood){
         y = rand()%height;
     }
     Food* newFood;
-    newFood = new Food(x,y,value,size,speed,specialFood);
+    if (specialFood){
+        SpecialFood specFood;
+        int speed;
+        int value;
+        int foodNum = rand()%10+1;
+        if(foodNum<=4){
+            specFood = WORM;
+            speed = 1;
+            value = 5;
+        }
+        else if (foodNum<=7) {
+            specFood = GREYMOUSE;
+            speed = 5;
+            value = 7;
+        }
+        else if (foodNum<=9) {
+            specFood = WHITEMOUSE;
+            speed = 5;
+            value = 10;
+        }
+        else {
+            specFood = FROG;
+            speed = 10;
+            value = 20;
+        }
+        newFood = new MovingFood(x,y,value,size,speed,RIGHT,specFood);
+    }
+    else{
+        NormalFood normalFood;
+        int foodNum = rand()%4+1;
+        switch(foodNum){
+            case BANANA:
+                normalFood = BANANA;
+                break;
+            case APPLE:
+                normalFood = APPLE;
+                break;
+            case ORANGE:
+                normalFood = ORANGE;
+                break;
+            case PEAR:
+                normalFood = PEAR;
+                break;
+        }
+        newFood = new StationaryFood(x,y,2,size,normalFood);
+    }
     food.push_front(newFood);//MUST BE FRONT!
 }
-list<pair<int,int>> Board::getFoodCoord(){
+list<pair<int,int>> Board::getFoodCoord(bool specialFood){
     list<Food*>::iterator foodIt;
     list<pair<int,int>> retCoord;
     for(foodIt = food.begin(); foodIt!=food.end(); foodIt++){
-        retCoord.push_back(make_pair((*foodIt)->getX(), (*foodIt)->getY()));
+        if((*foodIt)->isSpecialFood()==specialFood)
+            retCoord.push_back(make_pair((*foodIt)->getX(), (*foodIt)->getY()));
     }
     return retCoord;
+}
+pair<list<NormalFood>,list<SpecialFood> > Board::getFoodTypes(){
+    list<Food*>::iterator foodIt;
+    list<SpecialFood> foodTypesS;
+    list<NormalFood> foodTypesN;
+    for(foodIt = food.begin(); foodIt!=food.end(); foodIt++){
+        if((*foodIt)->isSpecialFood()){
+            foodTypesS.push_back((*foodIt)->getFoodType().second);
+        }
+        else{
+            foodTypesN.push_back((*foodIt)->getFoodType().first);
+        }
+    }
+    return make_pair(foodTypesN, foodTypesS);
 }
 void Board::moveSnake(list<Direction> &moveQueue){
     //checks if the turn is illegal:
@@ -73,7 +132,7 @@ void Board::didSnakeEat(){
         }
     }
     if (eaten){
-        this->placeFood(1,snake->getSnakeSize(),0,false);
+        this->placeFood(snake->getSnakeSize(), false);
     }
 }
 

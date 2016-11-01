@@ -88,6 +88,24 @@ int main(){
         haveEndTail = false;
     }
     endTail.setTexture(endTailImage);
+    //NormalFood:
+    sf::Texture normalFoodImage;
+    sf::Sprite normalFood;
+    bool haveNormalFood = true;
+    if(!normalFoodImage.loadFromFile("normalFoodTest.png")){
+        cout<<"Could not load normal food image"<<endl;
+        haveNormalFood = false;
+    }
+    normalFood.setTexture(normalFoodImage);
+    //SpecialFood:
+    sf::Texture specialFoodImage;
+    sf::Sprite specialFood;
+    bool haveSpecialFood = true;
+    if(!specialFoodImage.loadFromFile("specialFoodTest.png")){
+        cout<<"Could not load special food image"<<endl;
+        haveSpecialFood = false;
+    }
+    specialFood.setTexture(specialFoodImage);
     ////////Defining variables:////////////////
     sf::Clock clock;
     sf::Time time;
@@ -124,26 +142,15 @@ int main(){
             }
         }
         time = clock.getElapsedTime();
-        if(time.asMilliseconds()>=120){
+        if(time.asMilliseconds()>=1120){
             clock.restart();
             ///////////////Clear screen///////////////
             window.clear();
             board.moveSnake(moveQueue);
             ///////////////Drawing the snake:///////////////
-            //pair<BodyPart*,list<BodyPart*>> snake = board.getSnake();
             drawSnakeHead(window,haveSnakeHead, board, snakeHead, snakeHead_color);
             drawSnakeTail(window,haveSnakeTail,haveEndTail,board,snakeTail,endTail,snakeTail_color);
-            ///////////////Draw the food WARNING!! SIZE IS STANDARD AT THE MOMENT!!
-            int snakeSize = board.getSnakeSize();
-            sf::RectangleShape part(sf::Vector2f(snakeSize,snakeSize));
-            list<pair<int,int> > coordinates;
-            list<pair<int,int> >::iterator coordinatesIt;
-            coordinates = board.getFoodCoord();
-            part.setFillColor(foodColor);
-            for(coordinatesIt = coordinates.begin(); coordinatesIt!=coordinates.end(); coordinatesIt++){
-                part.setPosition(coordinatesIt->first, coordinatesIt->second);
-                window.draw(part);
-            }
+            drawFood(window,haveNormalFood,haveSpecialFood, board, normalFood, specialFood,foodColor);
 
             // Draw the string
             //window.draw(text);

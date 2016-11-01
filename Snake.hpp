@@ -1,6 +1,5 @@
 #pragma once
 #include "BodyPart.hpp"
-#include "Food.hpp"
 #include <list>
 #include <utility>
 #include <queue>

@@ -13,9 +13,10 @@ private:
 public:
     Board(int boardWidth,int boardHeight,int snakeSize);
     //Food:
-    void placeFood(int value, int size, int speed,bool specialFood);
-    list<pair<int,int>> getFoodCoord();
-    list<Food*> getAllFood(){return food;}
+    void placeFood(int size, bool specialFood);
+    list<pair<int,int>> getFoodCoord(bool specialFood);
+    pair<list<NormalFood>,list<SpecialFood> > getFoodTypes();
+    list<Food*> getAllFood(){return food;}//finn en annen løsning
     //Snake:
     
     //GetFunctions:
