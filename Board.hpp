@@ -15,6 +15,7 @@ public:
     //Food:
     void placeFood(int size, bool specialFood);
     list<pair<int,int>> getFoodCoord(bool specialFood);
+    list<Direction> getFoodDir();
     pair<list<NormalFood>,list<SpecialFood> > getFoodTypes();
     list<Food*> getAllFood(){return food;}//finn en annen løsning
     //Snake:

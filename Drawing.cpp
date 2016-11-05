@@ -81,18 +81,21 @@ void drawFood(sf::RenderWindow &window,bool haveNormalFood,bool haveSpecialFood,
     //////WARNING! CAN ONLY PRINT FOOD IN SIZE SNAKESIZE
     int snakeSize = board.getSnakeSize();
     sf::RectangleShape part(sf::Vector2f(snakeSize,snakeSize));
+    part.setFillColor(foodColor);
+    
     list<pair<int,int> > coordinates;
     list<pair<int,int> >::iterator coordinatesIt;
+    
     pair<list<NormalFood>,list<SpecialFood>> foodTypes;
     list<NormalFood>::iterator foodTypeNIt;
     list<SpecialFood>::iterator foodTypeSIt;
+    
     foodTypes = board.getFoodTypes();//<normal,special>
     // Stationary food:
     coordinates = board.getFoodCoord(false);//false for isSpecialFood()
-    part.setFillColor(foodColor);
     for(coordinatesIt = coordinates.begin(),foodTypeNIt = foodTypes.first.begin(); coordinatesIt!=coordinates.end(); coordinatesIt++,foodTypeNIt++){
         if(haveNormalFood){
-            normalFood.setTextureRect(sf::IntRect(0,*foodTypeNIt*snakeSize,snakeSize,snakeSize));
+            normalFood.setTextureRect(sf::IntRect(0,(*foodTypeNIt) * snakeSize,snakeSize,snakeSize));
             normalFood.setPosition(coordinatesIt->first, coordinatesIt->second);
             window.draw(normalFood);
 
@@ -105,9 +108,11 @@ void drawFood(sf::RenderWindow &window,bool haveNormalFood,bool haveSpecialFood,
     
     //moving Food:
     coordinates = board.getFoodCoord(true);//true for isSpecialFood()
-    for(coordinatesIt = coordinates.begin(),foodTypeSIt = foodTypes.second.begin(); coordinatesIt!=coordinates.end(); coordinatesIt++,foodTypeSIt++){
+    list<Direction> FoodDir = board.getFoodDir();
+    list<Direction>::iterator FoodDirIt;
+    for(coordinatesIt = coordinates.begin(),foodTypeSIt = foodTypes.second.begin(),FoodDirIt = FoodDir.begin(); coordinatesIt!=coordinates.end(); coordinatesIt++,foodTypeSIt++,FoodDirIt++){
         if(haveSpecialFood){
-            specialFood.setTextureRect(sf::IntRect(0,*foodTypeSIt*snakeSize,snakeSize,snakeSize));
+            specialFood.setTextureRect(sf::IntRect(0 * (*FoodDirIt),(*foodTypeSIt) * snakeSize,snakeSize,snakeSize));
             specialFood.setPosition(coordinatesIt->first, coordinatesIt->second);
             window.draw(specialFood);
         }

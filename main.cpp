@@ -142,7 +142,7 @@ int main(){
             }
         }
         time = clock.getElapsedTime();
-        if(time.asMilliseconds()>=1120){
+        if(time.asMilliseconds()>=320){
             clock.restart();
             ///////////////Clear screen///////////////
             window.clear();

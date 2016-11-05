@@ -22,7 +22,7 @@ void Board::placeFood(int size, bool specialFood){
         SpecialFood specFood;
         int speed;
         int value;
-        int foodNum = rand()%10+1;
+        int foodNum = rand()%11;
         if(foodNum<=4){
             specFood = WORM;
             speed = 1;
@@ -47,7 +47,7 @@ void Board::placeFood(int size, bool specialFood){
     }
     else{
         NormalFood normalFood;
-        int foodNum = rand()%4+1;
+        int foodNum = rand()%4;
         switch(foodNum){
             case BANANA:
                 normalFood = BANANA;
@@ -62,7 +62,7 @@ void Board::placeFood(int size, bool specialFood){
                 normalFood = PEAR;
                 break;
         }
-        newFood = new StationaryFood(x,y,2,size,normalFood);
+        newFood = new StationaryFood(x,y,2,size,normalFood);//2 is value
     }
     food.push_front(newFood);//MUST BE FRONT!
 }
@@ -74,6 +74,15 @@ list<pair<int,int>> Board::getFoodCoord(bool specialFood){
             retCoord.push_back(make_pair((*foodIt)->getX(), (*foodIt)->getY()));
     }
     return retCoord;
+}
+list<Direction> Board::getFoodDir(){
+    list<Food*>::iterator foodIt;
+    list<Direction> foodDir;
+    for(foodIt = food.begin(); foodIt!=food.end(); foodIt++){
+        if((*foodIt)->isSpecialFood()==true)
+            foodDir.push_back((*foodIt)->getDir());
+    }
+    return foodDir;
 }
 pair<list<NormalFood>,list<SpecialFood> > Board::getFoodTypes(){
     list<Food*>::iterator foodIt;

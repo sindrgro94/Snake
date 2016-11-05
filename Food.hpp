@@ -20,7 +20,8 @@ public:
     int getFoodSize(){return _size;}
     int getFoodValue(){return _value;}
     bool isSpecialFood(){return specialFood;}
-    virtual pair<NormalFood,SpecialFood> getFoodType();
+    virtual pair<NormalFood,SpecialFood> getFoodType()=0;
+    virtual Direction getDir()=0;
     
 };
 class StationaryFood : public Food{
@@ -28,7 +29,8 @@ private:
     NormalFood foodType;
 public:
     StationaryFood(int x, int y, int value, int size,NormalFood normalFood):foodType(normalFood),Food(x,y,value,size,false){};
-    pair<NormalFood,SpecialFood> getFoodType(){return make_pair(foodType, WORM);}
+    virtual pair<NormalFood,SpecialFood> getFoodType(){return make_pair(foodType, WORM);}
+    virtual Direction getDir(){return RIGHT;}//unused
 };
 class MovingFood : public Food{
 private:
@@ -37,6 +39,7 @@ private:
     SpecialFood foodType;
 public:
     MovingFood(int x, int y, int value, int size, int speed,Direction dir,SpecialFood specialFood):_speed(speed),dir(dir),foodType(specialFood),Food(x,y,value,size,true){};
-    pair<NormalFood,SpecialFood> getFoodType(){return make_pair(BANANA, foodType);}
+    virtual pair<NormalFood,SpecialFood> getFoodType(){return make_pair(BANANA, foodType);}
+    virtual Direction getDir(){return dir;}
     
 };
