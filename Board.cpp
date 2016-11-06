@@ -6,16 +6,18 @@
 using namespace std;
 
 /////////////////BOARD////////////////////////////
-Board::Board(int boardWidth,int boardHeight,int snakeSize) :width(boardWidth),height(boardHeight){
+Board::Board(int boardWidth,int boardHeight,int snakeSize, int infoBarSize, int edgeSize) :width(boardWidth),height(boardHeight),infoBarSize(infoBarSize),edgeSize(edgeSize){
     snake = new Snake(snakeSize);
     this->placeFood(snakeSize,false);
 }
+
+/////////////////FOOD////////////////////////////
 void Board::placeFood(int size, bool specialFood){
-    int x = rand()%width;
-    int y = rand()%height;
-    while (snake->foodCanNotBeHere(x,y,size) || x+size>width || y+size>height){
-        x = rand()%width;
-        y = rand()%height;
+    int x = rand()%width+edgeSize;
+    int y = rand()%height+edgeSize;
+    while (snake->foodCanNotBeHere(x,y,size) || x+size>width+edgeSize || y+size>height+edgeSize){
+        x = rand()%width+edgeSize;
+        y = rand()%height+edgeSize;
     }
     Food* newFood;
     if (specialFood){
@@ -98,6 +100,8 @@ pair<list<NormalFood>,list<SpecialFood> > Board::getFoodTypes(){
     }
     return make_pair(foodTypesN, foodTypesS);
 }
+
+/////////////////SNAKE////////////////////////////
 void Board::moveSnake(list<Direction> &moveQueue){
     //checks if the turn is illegal:
     if (!moveQueue.empty() && snake->IllegalTurn(moveQueue.front())){

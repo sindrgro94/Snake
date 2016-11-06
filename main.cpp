@@ -43,17 +43,20 @@ const sf::Color snakeHead_color = sf::Color::Red;
 const sf::Color snakeTail_color = sf::Color::Green;
 const sf::Color board_color = sf::Color::Black;
 const sf::Color foodColor = sf::Color::Blue;
-const int tile_size = 52;
-const int WINDOW_WIDTH = 800*2;
-const int WINDOW_HEIGHT = 600*2;
 const int SNAKE_SIZE = 50;
-
-
+const int EDGE_SIZE = 50;
+const int INFO_BAR = 140;
 int main(){
     srand(time(nullptr));
-    Board board(WINDOW_WIDTH,WINDOW_HEIGHT,SNAKE_SIZE);
+    vector<sf::VideoMode> modes = sf::VideoMode::getFullscreenModes();
+    const int WINDOW_WIDTH = modes[0].width; //2560 on Sindres Mac
+    const int WINDOW_HEIGHT = modes[0].height; //1600 on Sindres Mac
+
+    Board board(WINDOW_WIDTH-(2*EDGE_SIZE),WINDOW_HEIGHT-(2*EDGE_SIZE+INFO_BAR),SNAKE_SIZE,INFO_BAR,EDGE_SIZE);
     //////// Create the main window/////////////////
-    sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "SFML window",sf::Style::Default);
+    // Create a window with the same pixel depth as the desktop
+    sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
+    sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH,WINDOW_HEIGHT,desktop.bitsPerPixel), "Sindres Snake-spill",sf::Style::Fullscreen);
     sf::Font font;
     if (!font.loadFromFile("sansation.ttf")) {
         return EXIT_FAILURE;
@@ -65,7 +68,7 @@ int main(){
     sf::Texture snakeHeadImage;
     sf::Sprite snakeHead;
     bool haveSnakeHead = true;
-    if(!snakeHeadImage.loadFromFile("snakeHeadTest1.png")){
+    if(!snakeHeadImage.loadFromFile("snakeHead.png")){
         cout<<"Could not load snake head image."<<endl;
         haveSnakeHead = false;
     }
@@ -106,6 +109,16 @@ int main(){
         haveSpecialFood = false;
     }
     specialFood.setTexture(specialFoodImage);
+    //Wall:
+    sf::Texture wallImage;
+    sf::Sprite wall;
+    bool haveWall = true;
+    if(!wallImage.loadFromFile("wall.png")){
+        cout<<"Could not load wall image"<<endl;
+        haveWall = false;
+    }
+    wall.setTexture(wallImage);
+    
     ////////Defining variables:////////////////
     sf::Clock clock;
     sf::Time time;
@@ -114,52 +127,57 @@ int main(){
     
     //start the game loop:
     while (window.isOpen()){
-        // Process events
-        sf::Event event;
-        while (window.pollEvent(event)){
-            switch(event.type){
-                case sf::Event::Closed:
-                    window.close();
-                    break;
-                case sf::Event::KeyPressed:
-                    switch (event.key.code){
-                        case sf::Keyboard::Escape:
-                            window.close();
-                            break;
-                        case sf::Keyboard::Down:
-                            moveQueue.push_back(DOWN);
-                            break;
-                        case sf::Keyboard::Up:
-                            moveQueue.push_back(UP);
-                            break;
-                        case sf::Keyboard::Left:
-                            moveQueue.push_back(LEFT);
-                            break;
-                        case sf::Keyboard::Right:
-                            moveQueue.push_back(RIGHT);
-                            break;
-                    }
-            }
-        }
-        time = clock.getElapsedTime();
-        if(time.asMilliseconds()>=320){
-            clock.restart();
-            ///////////////Clear screen///////////////
-            window.clear();
-            board.moveSnake(moveQueue);
-            ///////////////Drawing the snake:///////////////
-            drawSnakeHead(window,haveSnakeHead, board, snakeHead, snakeHead_color);
-            drawSnakeTail(window,haveSnakeTail,haveEndTail,board,snakeTail,endTail,snakeTail_color);
-            drawFood(window,haveNormalFood,haveSpecialFood, board, normalFood, specialFood,foodColor);
-
-            // Draw the string
-            //window.draw(text);
         
-            // Update the window
-            window.display();
+        ////////Game running:////////////////
+        while(!board.didSnakeCollide(WINDOW_WIDTH, WINDOW_HEIGHT) && window.isOpen()){
+            sf::Event event;
+            while (window.pollEvent(event)){
+                switch(event.type){
+                    case sf::Event::Closed:
+                        window.close();
+                        break;
+                    case sf::Event::KeyPressed:
+                        switch (event.key.code){
+                            case sf::Keyboard::Escape:
+                                window.close();
+                                break;
+                            case sf::Keyboard::Down:
+                                moveQueue.push_back(DOWN);
+                                break;
+                            case sf::Keyboard::Up:
+                                moveQueue.push_back(UP);
+                                break;
+                            case sf::Keyboard::Left:
+                                moveQueue.push_back(LEFT);
+                                break;
+                            case sf::Keyboard::Right:
+                                moveQueue.push_back(RIGHT);
+                                break;
+                        }
+                }
+            }
+            time = clock.getElapsedTime();
+            if(time.asMilliseconds()>=990){
+                clock.restart();
+                ///////////////Clear screen///////////////
+                window.clear();
+                board.moveSnake(moveQueue);
+                ///////////////Drawing the snake:///////////////
+                drawSnakeHead(window,haveSnakeHead, board, snakeHead, snakeHead_color);
+                drawSnakeTail(window,haveSnakeTail,haveEndTail,board,snakeTail,endTail,snakeTail_color);
+                drawFood(window,haveNormalFood,haveSpecialFood, board, normalFood, specialFood,foodColor);
+                drawWall(window, haveWall, wall, WINDOW_WIDTH, WINDOW_HEIGHT, EDGE_SIZE, INFO_BAR);
+                // Draw the string
+                //window.draw(text);
+                             
+
+                
+                // Update the window
+                window.display();
+            }
+
         }
-        if (board.didSnakeCollide(WINDOW_WIDTH, WINDOW_HEIGHT))
-            window.close();
+        window.close();
     }
     
     return EXIT_SUCCESS;

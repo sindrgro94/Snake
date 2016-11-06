@@ -122,3 +122,26 @@ void drawFood(sf::RenderWindow &window,bool haveNormalFood,bool haveSpecialFood,
         }
     }
 }
+void drawWall(sf::RenderWindow &window,bool haveWall,sf::Sprite wall,int windowWidth,int windowHeight, int edgeSize, int infoBar){
+    if(haveWall){
+        //TOP:
+        wall.setTextureRect(sf::IntRect(0, 4*edgeSize,edgeSize,edgeSize));
+        for (int pos = 1; pos<windowWidth/edgeSize;pos++){
+            wall.setPosition(pos*edgeSize,0);
+            window.draw(wall);
+        }
+    }
+    else{
+        sf::RectangleShape part(sf::Vector2f(windowWidth,edgeSize));
+        part.setFillColor(sf::Color::White);
+        part.setPosition(0,windowHeight-infoBar-edgeSize);
+        window.draw(part);
+        part.setPosition(0, 0);
+        window.draw(part);
+        part.setSize(sf::Vector2f(edgeSize,windowHeight));
+        part.setPosition(0,0);
+        window.draw(part);
+        part.setPosition(windowWidth-edgeSize, 0);
+        window.draw(part);
+    }
+}

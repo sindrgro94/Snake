@@ -8,10 +8,11 @@ using namespace std;
 class Board{
 private:
     int width,height;
+    int infoBarSize,edgeSize;
     Snake* snake;
     list<Food*> food;
 public:
-    Board(int boardWidth,int boardHeight,int snakeSize);
+    Board(int boardWidth,int boardHeight,int snakeSize, int infoBarSize, int EdgeSize);
     //Food:
     void placeFood(int size, bool specialFood);
     list<pair<int,int>> getFoodCoord(bool specialFood);
