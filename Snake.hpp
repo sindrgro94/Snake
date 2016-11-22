@@ -14,9 +14,10 @@ private:
     int _snakeSize;
     int _snakeLength;
     int _eatenFood;
+    int _playerNumber;
     
 public:
-    Snake(int snakeSize);
+    Snake(int snakeSize, int playerNumber);
     bool IllegalTurn(Direction dir);
     pair<BodyPart*,list<BodyPart*>> getSnake(){return make_pair(snakeHead,snakeTail);};
     void removeLastTail();
@@ -35,7 +36,7 @@ public:
     void changeEatenFood(int value){_eatenFood += value;}
     void changeSnakeLength(int value){_snakeLength += value;}
     ////////
-    bool didSnakeCollide(int boardWidth,int boardHeight);
+    bool didSnakeCollide(int boardWidth,int boardHeight, int infoBar, int edgeSize);
     bool foodCanNotBeHere(int x,int y,int foodSize);
     void printSnakeStuff()const;
 };

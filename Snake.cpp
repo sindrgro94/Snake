@@ -6,10 +6,10 @@
 using namespace std;
 
 /////////////////SNAKE////////////////////////////
-Snake::Snake(int snakeSize) : _snakeSize(snakeSize),_snakeLength(5),_eatenFood(0){
+Snake::Snake(int snakeSize, int playerNumber) : _snakeSize(snakeSize),_snakeLength(5),_eatenFood(0),_playerNumber(playerNumber){
     //Standard inital Values: length=5, direction=Right
     int startY = 100;
-    int startX = 100;
+    int startX = 300;
     snakeHead = new BodyPart(make_pair(RIGHT,RIGHT),startY,startX+snakeSize,false);
     BodyPart* bodypart;
     for(int part = 0; part<_snakeLength; part++){
@@ -114,10 +114,10 @@ list<pair<int,int>> Snake::getSnakeTailCoordAndDir(list<pair<Direction,Direction
     }
     return retCoord;
 }
-bool Snake::didSnakeCollide(int boardWidth,int boardHeight){
+bool Snake::didSnakeCollide(int boardWidth,int boardHeight, int infoBar, int edgeSize){
     int snakeHeadX = snakeHead->getX();
     int snakeHeadY = snakeHead->getY();
-    if (snakeHeadX<0 || snakeHeadX+_snakeSize>boardWidth || snakeHeadY<0 ||snakeHeadY+_snakeSize>boardHeight)
+    if (snakeHeadX<0+edgeSize || snakeHeadX+_snakeSize>boardWidth-edgeSize || snakeHeadY<0+edgeSize ||snakeHeadY+_snakeSize>boardHeight-infoBar-edgeSize)
         return true;
     list<pair<int,int>> snakeCoord = this->getSnakeTailCoord();
     list<pair<int,int>>::iterator coordIt;

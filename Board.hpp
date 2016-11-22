@@ -18,7 +18,6 @@ public:
     list<pair<int,int>> getFoodCoord(bool specialFood);
     list<Direction> getFoodDir();
     pair<list<NormalFood>,list<SpecialFood> > getFoodTypes();
-    list<Food*> getAllFood(){return food;}//finn en annen løsning
     //Snake:
     
     //GetFunctions:
@@ -28,7 +27,7 @@ public:
     Direction getSnakeHeadDirection(){return snake->getSnakeHeadDirection();}
     int getSnakeSize(){return snake->getSnakeSize();}
     ///
-    bool didSnakeCollide(int width,int height){return snake->didSnakeCollide(width, height);}
+    bool didSnakeCollide(int width,int height, int infoBar, int edgeSize){return snake->didSnakeCollide(width, height, infoBar, edgeSize);}
     void moveSnake(list<Direction> &moveQueue);
     void didSnakeEat();
     

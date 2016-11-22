@@ -129,7 +129,7 @@ int main(){
     while (window.isOpen()){
         
         ////////Game running:////////////////
-        while(!board.didSnakeCollide(WINDOW_WIDTH, WINDOW_HEIGHT) && window.isOpen()){
+        while(!board.didSnakeCollide(WINDOW_WIDTH, WINDOW_HEIGHT, INFO_BAR, EDGE_SIZE) && window.isOpen()){
             sf::Event event;
             while (window.pollEvent(event)){
                 switch(event.type){
@@ -157,7 +157,7 @@ int main(){
                 }
             }
             time = clock.getElapsedTime();
-            if(time.asMilliseconds()>=990){
+            if(time.asMilliseconds()>=150){
                 clock.restart();
                 ///////////////Clear screen///////////////
                 window.clear();

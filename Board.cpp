@@ -7,7 +7,7 @@ using namespace std;
 
 /////////////////BOARD////////////////////////////
 Board::Board(int boardWidth,int boardHeight,int snakeSize, int infoBarSize, int edgeSize) :width(boardWidth),height(boardHeight),infoBarSize(infoBarSize),edgeSize(edgeSize){
-    snake = new Snake(snakeSize);
+    snake = new Snake(snakeSize, 1);
     this->placeFood(snakeSize,false);
 }
 

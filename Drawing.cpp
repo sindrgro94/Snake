@@ -126,10 +126,38 @@ void drawWall(sf::RenderWindow &window,bool haveWall,sf::Sprite wall,int windowW
     if(haveWall){
         //TOP:
         wall.setTextureRect(sf::IntRect(0, 4*edgeSize,edgeSize,edgeSize));
-        for (int pos = 1; pos<windowWidth/edgeSize;pos++){
+        for (int pos = 0; pos<=windowWidth/edgeSize;pos++){
             wall.setPosition(pos*edgeSize,0);
             window.draw(wall);
         }
+        //BUTTOM:
+        wall.setTextureRect(sf::IntRect(0,3*edgeSize,edgeSize,edgeSize));
+        for (int pos = 0; pos<=windowWidth/edgeSize;pos++){
+            wall.setPosition(pos*edgeSize,windowHeight-infoBar-edgeSize);
+            window.draw(wall);
+        }
+        //LEFT:
+        wall.setTextureRect(sf::IntRect(0,edgeSize,edgeSize,edgeSize));
+        for (int pos = (windowHeight-edgeSize-infoBar)/edgeSize; pos>0;pos--){
+            wall.setPosition(0,pos*edgeSize);
+            window.draw(wall);
+        }
+        //RIGHT:
+        wall.setTextureRect(sf::IntRect(0,2*edgeSize,edgeSize,edgeSize));
+        for (int pos = (windowHeight-edgeSize-infoBar)/edgeSize; pos>0;pos--){
+            wall.setPosition(windowWidth-edgeSize, pos*edgeSize);
+            window.draw(wall);
+        }
+        //Corners:
+        wall.setTextureRect(sf::IntRect(0,0,edgeSize,edgeSize));
+        wall.setPosition(0,0);// upper left
+        window.draw(wall);
+        wall.setPosition(windowWidth-edgeSize,0); //lower left
+        window.draw(wall);
+        wall.setPosition(0, windowHeight-infoBar-edgeSize); // upper right
+        window.draw(wall);
+        wall.setPosition(windowWidth-edgeSize+4, windowHeight-infoBar-edgeSize); // lower right
+        window.draw(wall);
     }
     else{
         sf::RectangleShape part(sf::Vector2f(windowWidth,edgeSize));
