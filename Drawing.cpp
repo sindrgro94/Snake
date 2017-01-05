@@ -173,3 +173,12 @@ void drawWall(sf::RenderWindow &window,bool haveWall,sf::Sprite wall,int windowW
         window.draw(part);
     }
 }
+void drawInfoBar(sf::RenderWindow &window, bool haveNormalFood, bool haveSpecialFood, Board board, sf::Sprite normalFood, sf::Sprite specialFood, int WINDOW_WIDTH, int WINDOW_HEIGHT, int EDGE_SIZE, int INFO_BAR, sf::Font font){
+    
+    int categorySize = 400;
+    sf::RectangleShape background(sf::Vector2f(WINDOW_WIDTH,INFO_BAR));
+    background.setFillColor(sf::Color(100,100,100));
+    background.setPosition(0,WINDOW_HEIGHT-INFO_BAR);
+    window.draw(background);
+    
+}

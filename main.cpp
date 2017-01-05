@@ -167,6 +167,7 @@ int main(){
                 drawSnakeTail(window,haveSnakeTail,haveEndTail,board,snakeTail,endTail,snakeTail_color);
                 drawFood(window,haveNormalFood,haveSpecialFood, board, normalFood, specialFood,foodColor);
                 drawWall(window, haveWall, wall, WINDOW_WIDTH, WINDOW_HEIGHT, EDGE_SIZE, INFO_BAR);
+                drawInfoBar(window, haveNormalFood, haveSpecialFood, board, normalFood, specialFood, WINDOW_WIDTH, WINDOW_HEIGHT, EDGE_SIZE, INFO_BAR, font);
                 // Draw the string
                 //window.draw(text);
                              
