@@ -18,14 +18,13 @@ public:
     list<pair<int,int>> getFoodCoord(bool specialFood);
     list<Direction> getFoodDir();
     pair<list<NormalFood>,list<SpecialFood> > getFoodTypes();
-    //Snake:
     
     //GetFunctions:
-    //pair<BodyPart*,list<BodyPart*>>getSnake(){return snake->getSnake();}
     pair<int,int> getSnakeHeadCoord(){return snake->getSnakeHeadCoord();}
     list<pair<int,int>> getSnakeTailCoordAndDir(list<pair<Direction,Direction>> &dir){return snake->getSnakeTailCoordAndDir(dir);}
     Direction getSnakeHeadDirection(){return snake->getSnakeHeadDirection();}
     int getSnakeSize(){return snake->getSnakeSize();}
+    int getSnakePoints();
     ///
     bool didSnakeCollide(int width,int height, int infoBar, int edgeSize){return snake->didSnakeCollide(width, height, infoBar, edgeSize);}
     void moveSnake(list<Direction> &moveQueue);

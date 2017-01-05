@@ -14,6 +14,7 @@ private:
     int _snakeSize;
     int _snakeLength;
     int _eatenFood;
+    int _score;
     int _playerNumber;
     
 public:
@@ -32,9 +33,11 @@ public:
     list<pair<int,int>> getSnakeTailCoordAndDir(list<pair<Direction,Direction>> &dir);
     int getSnakeSize(){return _snakeSize;}
     int getEatenFood(){return _eatenFood;}
+    int getScore(){return _score;}
     //ChangeFunctions:
     void changeEatenFood(int value){_eatenFood += value;}
     void changeSnakeLength(int value){_snakeLength += value;}
+    void updateScore(int value){_score += value;}
     ////////
     bool didSnakeCollide(int boardWidth,int boardHeight, int infoBar, int edgeSize);
     bool foodCanNotBeHere(int x,int y,int foodSize);

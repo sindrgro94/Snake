@@ -13,13 +13,13 @@ Board::Board(int boardWidth,int boardHeight,int snakeSize, int infoBarSize, int 
 
 /////////////////FOOD////////////////////////////
 void Board::placeFood(int size, bool specialFood){
+    Food* newFood;
     int x = rand()%width+edgeSize;
     int y = rand()%height+edgeSize;
     while (snake->foodCanNotBeHere(x,y,size) || x+size>width+edgeSize || y+size>height+edgeSize){
         x = rand()%width+edgeSize;
         y = rand()%height+edgeSize;
     }
-    Food* newFood;
     if (specialFood){
         SpecialFood specFood;
         int speed;
@@ -27,25 +27,45 @@ void Board::placeFood(int size, bool specialFood){
         int foodNum = rand()%11;
         if(foodNum<=4){
             specFood = WORM;
-            speed = 1;
+            speed = 10;
             value = 5;
         }
-        else if (foodNum<=7) {
+        else if (foodNum<=6) {
             specFood = GREYMOUSE;
-            speed = 5;
+            speed = 20;
             value = 7;
         }
-        else if (foodNum<=9) {
+        else if (foodNum<=8) {
             specFood = WHITEMOUSE;
-            speed = 5;
+            speed = 20;
             value = 10;
         }
         else {
             specFood = FROG;
-            speed = 10;
+            speed = 35;
             value = 20;
         }
-        newFood = new MovingFood(x,y,value,size,speed,RIGHT,specFood);
+        int direction = rand()%4;
+        Direction dir;
+        switch (direction){
+            case RIGHT:
+                dir = RIGHT;
+                x = 0;
+                break;
+            case LEFT:
+                dir = LEFT;
+                x = width;
+                break;
+            case UP:
+                dir = UP;
+                y = height;
+                break;
+            case DOWN:
+                dir = DOWN;
+                y = 0;
+                break;
+        }
+        newFood = new MovingFood(x,y,value,size,speed,dir,specFood);
     }
     else{
         NormalFood normalFood;
@@ -116,6 +136,19 @@ void Board::moveSnake(list<Direction> &moveQueue){
     else{//Here we turn:
         snake->turnAndMove(moveQueue);
     }
+    //moveFood:
+    list<Food*>::iterator foodIt;
+    for(foodIt = food.begin(); foodIt != food.end(); foodIt++){
+        if((*foodIt)->isSpecialFood()){
+            (*foodIt)->moveFood();
+            int x = (*foodIt)->getX();
+            int y = (*foodIt)->getY();
+            if (x<0 || x>width || y<0 || y>height){
+                food.erase(foodIt);
+            }
+        }
+        
+    }
     //check if we have eaten:
     this->didSnakeEat();
     //check if the snake should get longer or not:
@@ -132,20 +165,38 @@ void Board::didSnakeEat(){
     list<Food*>::iterator foodIt;
     int x = snake->getSnakeHeadX();
     int y = snake->getSnakeHeadY();
-    bool eaten = false;
+    bool newFood = false;
+    bool specialFoodExist = false;
     for(foodIt = food.begin(); foodIt != food.end(); foodIt++){
+        if((*foodIt)->isSpecialFood()){
+            specialFoodExist = true;
+        }
         if (x < (*foodIt)->getX() + (*foodIt)->getFoodSize() &&
             x + snake->getSnakeSize() > (*foodIt)->getX() &&
             y < (*foodIt)->getY()+ (*foodIt)->getFoodSize() &&
             y + snake->getSnakeSize() > (*foodIt)->getY()){
+            
             snake->changeEatenFood((*foodIt)->getFoodValue());
+            snake->updateScore((*foodIt)->getFoodValue());
             food.erase(foodIt);
-            if(!(*foodIt)->isSpecialFood())
-                eaten = true;
+            if(!(*foodIt)->isSpecialFood()){
+                newFood = true;
+            }
+            else{
+                specialFoodExist = false;
+            }
         }
     }
-    if (eaten){
+    if (newFood){
         this->placeFood(snake->getSnakeSize(), false);
     }
+    if(!specialFoodExist){
+        int newSpecialFood = rand()%100;
+        if (newSpecialFood<20){//number represents percent chance for special food
+            this->placeFood(snake->getSnakeSize(), true);
+        }
+    }
 }
-
+int Board::getSnakePoints(){
+    return snake->getScore();
+}

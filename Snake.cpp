@@ -6,7 +6,7 @@
 using namespace std;
 
 /////////////////SNAKE////////////////////////////
-Snake::Snake(int snakeSize, int playerNumber) : _snakeSize(snakeSize),_snakeLength(5),_eatenFood(0),_playerNumber(playerNumber){
+Snake::Snake(int snakeSize, int playerNumber) : _snakeSize(snakeSize),_snakeLength(5),_eatenFood(0),_playerNumber(playerNumber),_score(0){
     //Standard inital Values: length=5, direction=Right
     int startY = 100;
     int startX = 300;
