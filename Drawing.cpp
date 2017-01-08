@@ -175,10 +175,75 @@ void drawWall(sf::RenderWindow &window,bool haveWall,sf::Sprite wall,int windowW
 }
 void drawInfoBar(sf::RenderWindow &window, bool haveNormalFood, bool haveSpecialFood, Board board, sf::Sprite normalFood, sf::Sprite specialFood, int WINDOW_WIDTH, int WINDOW_HEIGHT, int EDGE_SIZE, int INFO_BAR, sf::Font font){
     
-    int categorySize = 400;
+    int categorySize = 500;
     sf::RectangleShape background(sf::Vector2f(WINDOW_WIDTH,INFO_BAR));
     background.setFillColor(sf::Color(100,100,100));
     background.setPosition(0,WINDOW_HEIGHT-INFO_BAR);
     window.draw(background);
+    // Regular FOOD:
     
+    sf::Text text("Food Available:", font, 50);
+    text.setColor(sf::Color::Red);
+    text.setPosition(WINDOW_WIDTH-2*categorySize, WINDOW_HEIGHT-INFO_BAR+5);
+    window.draw(text);
+    int snakeSize = board.getSnakeSize();
+    switch (*board.getFoodTypes().first.begin()) {
+        case BANANA:
+            normalFood.setTextureRect(sf::IntRect(0,0 * snakeSize,snakeSize,snakeSize));
+            text.setString("BANANA, 2p");
+            break;
+        case APPLE:
+            normalFood.setTextureRect(sf::IntRect(0,1 * snakeSize,snakeSize,snakeSize));
+            text.setString("APPLE, 2p");
+            break;
+        case ORANGE:
+            normalFood.setTextureRect(sf::IntRect(0,2 * snakeSize,snakeSize,snakeSize));
+            text.setString("ORANGE, 2p");
+            break;
+        case PEAR:
+            normalFood.setTextureRect(sf::IntRect(0,3 * snakeSize,snakeSize,snakeSize));
+            text.setString("PEAR, 2p");
+            break;
+    }
+    normalFood.setPosition(WINDOW_WIDTH-2*categorySize,WINDOW_HEIGHT-INFO_BAR/2);
+    window.draw(normalFood);
+    text.setPosition(WINDOW_WIDTH-2*categorySize + snakeSize + 10, WINDOW_HEIGHT-INFO_BAR/2);
+    window.draw(text);
+    //MOVING FOOD:
+    text.setString("Bonus Food Available:");
+    text.setPosition(WINDOW_WIDTH-categorySize, WINDOW_HEIGHT-INFO_BAR+5);
+    window.draw(text);
+    switch (*board.getFoodTypes().second.begin()) {
+        case WORM:
+            specialFood.setTextureRect(sf::IntRect(0,0 * snakeSize,snakeSize,snakeSize));
+            text.setString("WORM, 5p");
+            break;
+        case GREYMOUSE:
+            specialFood.setTextureRect(sf::IntRect(0,1 * snakeSize,snakeSize,snakeSize));
+            text.setString("Grey Mouse, 7p");
+            break;
+        case WHITEMOUSE:
+            specialFood.setTextureRect(sf::IntRect(0,2 * snakeSize,snakeSize,snakeSize));
+            text.setString("White Mouse, 10p");
+            break;
+        case FROG:
+            specialFood.setTextureRect(sf::IntRect(0,3 * snakeSize,snakeSize,snakeSize));
+            text.setString("Frog, 20p");
+            break;
+    }
+    text.setPosition(WINDOW_WIDTH-categorySize+snakeSize+10, WINDOW_HEIGHT-INFO_BAR/2);
+    window.draw(text);
+    if(haveSpecialFood){
+        specialFood.setPosition(WINDOW_WIDTH-categorySize, WINDOW_HEIGHT-INFO_BAR/2);
+        window.draw(specialFood);
+    }
+    text.setString("Score:");
+    text.setPosition(WINDOW_WIDTH-3*categorySize, WINDOW_HEIGHT-INFO_BAR+5);
+    window.draw(text);
+    string score = "";
+    score += to_string(board.getSnakePoints());
+    score += " points";
+    text.setString(score);
+    text.setPosition(WINDOW_WIDTH-3*categorySize, WINDOW_HEIGHT-INFO_BAR/2);
+    window.draw(text);
 }

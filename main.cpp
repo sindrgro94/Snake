@@ -58,7 +58,7 @@ int main(){
     sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
     sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH,WINDOW_HEIGHT,desktop.bitsPerPixel), "Sindres Snake-spill",sf::Style::Fullscreen);
     sf::Font font;
-    if (!font.loadFromFile("sansation.ttf")) {
+    if (!font.loadFromFile("angrybirds-regular.ttf")) {
         return EXIT_FAILURE;
     }
     sf::Text text("Hello SFML", font, 40);
