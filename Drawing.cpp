@@ -3,30 +3,31 @@
 #include <utility>
 using namespace std;
 
-void drawSnakeHead(sf::RenderWindow &window,bool havePicture, Board board, sf::Sprite snakeHead,sf::Color snakeHead_color){
+void drawSnakeHead(sf::RenderWindow &window, Board board, Images sprites,sf::Color snakeHead_color){
     int snakeSize = board.getSnakeSize();
     sf::RectangleShape part(sf::Vector2f(snakeSize,snakeSize));
     pair<int,int> snakeHeadCoord = board.getSnakeHeadCoord();
-    if(!havePicture){
+    if(!sprites.getHaveSnakeHead()){
         part.setFillColor(snakeHead_color);
         part.setPosition(snakeHeadCoord.first,snakeHeadCoord.second);
         window.draw(part);
     }
     else{
+        sf::Sprite snakeHead = sprites.getSnakeHead();
         snakeHead.setTextureRect(sf::IntRect(0,board.getSnakeHeadDirection()*snakeSize,snakeSize,snakeSize));
         snakeHead.setPosition(snakeHeadCoord.first, snakeHeadCoord.second);
         window.draw(snakeHead);
     }
 
 }
-void drawSnakeTail(sf::RenderWindow &window,bool haveSnakeTail,bool haveEndTail,Board board,sf::Sprite snakeTail,sf::Sprite endTail,sf::Color snakeTail_color){
+void drawSnakeTail(sf::RenderWindow &window, Board board, Images sprites,sf::Color snakeTail_color){
     
     int snakeSize = board.getSnakeSize();
     list<pair<int,int> > coordinates;
     list<pair<Direction,Direction>> dir;
     coordinates = board.getSnakeTailCoordAndDir(dir);
     list<pair<int,int> >::iterator coordinatesIt;
-    if (!haveSnakeTail) {
+    if (!sprites.getHaveSnakeTail()) {
         sf::RectangleShape part(sf::Vector2f(snakeSize,snakeSize));
         part.setFillColor(snakeTail_color);
         for(coordinatesIt = coordinates.begin(); coordinatesIt!=coordinates.end(); coordinatesIt++){
@@ -38,6 +39,7 @@ void drawSnakeTail(sf::RenderWindow &window,bool haveSnakeTail,bool haveEndTail,
         list<pair<Direction,Direction>>::iterator dirIt;
         coordinatesIt = coordinates.begin();
         for(dirIt = dir.begin(); dirIt!=dir.end(); dirIt++){
+            sf::Sprite snakeTail = sprites.getSnakeTail();
             snakeTail.setPosition(coordinatesIt->first,coordinatesIt->second);
             if (dirIt->first == dirIt->second){
                 snakeTail.setTextureRect(sf::IntRect(0,dirIt->first*snakeSize,snakeSize,snakeSize));
@@ -52,9 +54,10 @@ void drawSnakeTail(sf::RenderWindow &window,bool haveSnakeTail,bool haveEndTail,
             }
             
             //If we are at the last tail:
+            sf::Sprite endTail = sprites.getEndTail();
             endTail.setPosition(coordinatesIt->first,coordinatesIt->second);
             //tempCoord = make_pair(coordinatesIt->first, coordinatesIt->second);
-            if(++coordinatesIt == coordinates.end() && haveEndTail){
+            if(++coordinatesIt == coordinates.end() && sprites.getHaveEndTail()){
                 if (dirIt->first == dirIt->second){
                     endTail.setTextureRect(sf::IntRect(0,dirIt->first*snakeSize,snakeSize,snakeSize));
                 }
@@ -77,7 +80,7 @@ void drawSnakeTail(sf::RenderWindow &window,bool haveSnakeTail,bool haveEndTail,
         
     }
 }
-void drawFood(sf::RenderWindow &window,bool haveNormalFood,bool haveSpecialFood, Board board, sf::Sprite normalFood, sf::Sprite specialFood,sf::Color foodColor){
+void drawFood(sf::RenderWindow &window, Board board,Images sprites,sf::Color foodColor){
     //////WARNING! CAN ONLY PRINT FOOD IN SIZE SNAKESIZE
     int snakeSize = board.getSnakeSize();
     sf::RectangleShape part(sf::Vector2f(snakeSize,snakeSize));
@@ -94,7 +97,8 @@ void drawFood(sf::RenderWindow &window,bool haveNormalFood,bool haveSpecialFood,
     // Stationary food:
     coordinates = board.getFoodCoord(false);//false for isSpecialFood()
     for(coordinatesIt = coordinates.begin(),foodTypeNIt = foodTypes.first.begin(); coordinatesIt!=coordinates.end(); coordinatesIt++,foodTypeNIt++){
-        if(haveNormalFood){
+        if(sprites.getHaveNormalFood()){
+            sf::Sprite normalFood = sprites.getNormalFood();
             normalFood.setTextureRect(sf::IntRect(0,(*foodTypeNIt) * snakeSize,snakeSize,snakeSize));
             normalFood.setPosition(coordinatesIt->first, coordinatesIt->second);
             window.draw(normalFood);
@@ -111,7 +115,8 @@ void drawFood(sf::RenderWindow &window,bool haveNormalFood,bool haveSpecialFood,
     list<Direction> FoodDir = board.getFoodDir();
     list<Direction>::iterator FoodDirIt;
     for(coordinatesIt = coordinates.begin(),foodTypeSIt = foodTypes.second.begin(),FoodDirIt = FoodDir.begin(); coordinatesIt!=coordinates.end(); coordinatesIt++,foodTypeSIt++,FoodDirIt++){
-        if(haveSpecialFood){
+        if(sprites.getHaveSpecialFood()){
+            sf::Sprite specialFood = sprites.getSpecialFood();
             specialFood.setTextureRect(sf::IntRect(0 * (*FoodDirIt),(*foodTypeSIt) * snakeSize,snakeSize,snakeSize));
             specialFood.setPosition(coordinatesIt->first, coordinatesIt->second);
             window.draw(specialFood);
@@ -122,8 +127,9 @@ void drawFood(sf::RenderWindow &window,bool haveNormalFood,bool haveSpecialFood,
         }
     }
 }
-void drawWall(sf::RenderWindow &window,bool haveWall,sf::Sprite wall,int windowWidth,int windowHeight, int edgeSize, int infoBar){
-    if(haveWall){
+void drawWall(sf::RenderWindow &window, Images sprites,int windowWidth,int windowHeight, int edgeSize,int infoBar){
+    if(sprites.getHaveWall()){
+        sf::Sprite wall = sprites.getWall();
         //TOP:
         wall.setTextureRect(sf::IntRect(0, 4*edgeSize,edgeSize,edgeSize));
         for (int pos = 0; pos<=windowWidth/edgeSize;pos++){
@@ -173,7 +179,7 @@ void drawWall(sf::RenderWindow &window,bool haveWall,sf::Sprite wall,int windowW
         window.draw(part);
     }
 }
-void drawInfoBar(sf::RenderWindow &window, bool haveNormalFood, bool haveSpecialFood, Board board, sf::Sprite normalFood, sf::Sprite specialFood, int WINDOW_WIDTH, int WINDOW_HEIGHT, int EDGE_SIZE, int INFO_BAR, sf::Font font){
+void drawInfoBar(sf::RenderWindow &window, Board board, Images sprites, int WINDOW_WIDTH, int WINDOW_HEIGHT, int EDGE_SIZE, int INFO_BAR, sf::Font font){
     
     int categorySize = 500;
     sf::RectangleShape background(sf::Vector2f(WINDOW_WIDTH,INFO_BAR));
@@ -187,6 +193,7 @@ void drawInfoBar(sf::RenderWindow &window, bool haveNormalFood, bool haveSpecial
     text.setPosition(WINDOW_WIDTH-2*categorySize, WINDOW_HEIGHT-INFO_BAR+5);
     window.draw(text);
     int snakeSize = board.getSnakeSize();
+    sf::Sprite normalFood = sprites.getNormalFood();
     switch (*board.getFoodTypes().first.begin()) {
         case BANANA:
             normalFood.setTextureRect(sf::IntRect(0,0 * snakeSize,snakeSize,snakeSize));
@@ -213,6 +220,7 @@ void drawInfoBar(sf::RenderWindow &window, bool haveNormalFood, bool haveSpecial
     text.setString("Bonus Food Available:");
     text.setPosition(WINDOW_WIDTH-categorySize, WINDOW_HEIGHT-INFO_BAR+5);
     window.draw(text);
+    sf::Sprite specialFood = sprites.getSpecialFood();
     switch (*board.getFoodTypes().second.begin()) {
         case WORM:
             specialFood.setTextureRect(sf::IntRect(0,0 * snakeSize,snakeSize,snakeSize));
@@ -233,7 +241,7 @@ void drawInfoBar(sf::RenderWindow &window, bool haveNormalFood, bool haveSpecial
     }
     text.setPosition(WINDOW_WIDTH-categorySize+snakeSize+10, WINDOW_HEIGHT-INFO_BAR/2);
     window.draw(text);
-    if(haveSpecialFood){
+    if(sprites.getHaveSpecialFood()){
         specialFood.setPosition(WINDOW_WIDTH-categorySize, WINDOW_HEIGHT-INFO_BAR/2);
         window.draw(specialFood);
     }

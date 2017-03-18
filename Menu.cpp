@@ -13,14 +13,21 @@ Menu::Menu(double width, double height,sf::Font &font): selectedItemIndex(0), fo
     menu[1].setFont(font);
     menu[1].setColor(sf::Color::White);
     menu[1].setString("Options");
-    menu[1].setPosition(sf::Vector2f(width/2,height/(MAX_NUMBER_OF_ITEMS+1) * 2 ));
+    menu[1].setPosition(sf::Vector2f(width/2, height/(MAX_NUMBER_OF_ITEMS+1) * 2 ));
     menu[1].setCharacterSize(fontSize);
     
     menu[2].setFont(font);
     menu[2].setColor(sf::Color::White);
-    menu[2].setString("Exit");
-    menu[2].setPosition(sf::Vector2f(width/2,height/(MAX_NUMBER_OF_ITEMS+1) * 3 ));
+    menu[2].setString("Highscore");
+    menu[2].setPosition(sf::Vector2f(width/2, height/(MAX_NUMBER_OF_ITEMS+1) * 3 ));
     menu[2].setCharacterSize(fontSize);
+    
+    menu[3].setFont(font);
+    menu[3].setColor(sf::Color::White);
+    menu[3].setString("Exit");
+    menu[3].setPosition(sf::Vector2f(width/2, height/(MAX_NUMBER_OF_ITEMS+1) * 4 ));
+    menu[3].setCharacterSize(fontSize);
+
 }
 
 Menu::~Menu(){

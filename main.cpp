@@ -22,7 +22,6 @@
 #include "Drawing.hpp"
 #include "Info.hpp"
 #include "Menu.hpp"
-#include "Images.hpp"
 #include <cstdlib>
 #include <ctime>
 #include <iostream>
@@ -102,6 +101,9 @@ int main(){
                                         //options
                                         break;
                                     case 2:
+                                        //highscore
+                                        break;
+                                    case 3:
                                         window.close();
                                         break;
                                     default:
@@ -120,10 +122,6 @@ int main(){
                 }
             }
             window.clear();
-            sf::Sprite snakeHead = sprites.getSnakeHead();
-            snakeHead.setTextureRect(sf::IntRect(0,board.getSnakeHeadDirection()*SNAKE_SIZE,SNAKE_SIZE,SNAKE_SIZE));
-            snakeHead.setPosition(200, 200);
-            window.draw(snakeHead);
             menu.draw(window);
             window.display();
         }
@@ -163,11 +161,11 @@ int main(){
                 window.clear();
                 board.moveSnake(moveQueue);
                 ///////////////Drawing the snake:///////////////
-                drawSnakeHead(window,sprites.getHaveSnakeHead(), board, sprites.getSnakeHead(), snakeHead_color);
-                drawSnakeTail(window,sprites.getHaveSnakeTail(),sprites.getHaveEndTail(),board,sprites.getSnakeTail(),sprites.getEndTail(),snakeTail_color);
-                drawFood(window,sprites.getHaveNormalFood(),sprites.getHaveSpecialFood(), board, sprites.getNormalFood(), sprites.getSpecialFood(),foodColor);
-                drawWall(window, sprites.getHaveWall(), sprites.getWall(), WINDOW_WIDTH, WINDOW_HEIGHT, EDGE_SIZE, INFO_BAR);
-                drawInfoBar(window, sprites.getHaveNormalFood(), sprites.getHaveSpecialFood(), board, sprites.getNormalFood(), sprites.getSpecialFood(), WINDOW_WIDTH, WINDOW_HEIGHT, EDGE_SIZE, INFO_BAR, font);
+                drawSnakeHead(window,board, sprites, snakeHead_color);
+                drawSnakeTail(window,board,sprites,snakeTail_color);
+                drawFood(window, board, sprites,foodColor);
+                drawWall(window, sprites, WINDOW_WIDTH, WINDOW_HEIGHT, EDGE_SIZE, INFO_BAR);
+                drawInfoBar(window, board, sprites, WINDOW_WIDTH, WINDOW_HEIGHT, EDGE_SIZE, INFO_BAR, font);
                 // Draw the string
                 //window.draw(text);
                              
