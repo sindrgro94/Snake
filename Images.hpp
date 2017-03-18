@@ -25,12 +25,12 @@ private:
 public:
     Images();
     
-    sf::Sprite& getSnakeHead(){return snakeHead;}
-    sf::Sprite& getSnakeTail(){return snakeTail;}
-    sf::Sprite& getEndTail(){return endTail;}
-    sf::Sprite& getNormalFood(){return normalFood;}
-    sf::Sprite& getSpecialFood(){return specialFood;}
-    sf::Sprite& getWall(){return wall;}
+    sf::Sprite getSnakeHead(){return snakeHead;}
+    sf::Sprite getSnakeTail(){return snakeTail;}
+    sf::Sprite getEndTail(){return endTail;}
+    sf::Sprite getNormalFood(){return normalFood;}
+    sf::Sprite getSpecialFood(){return specialFood;}
+    sf::Sprite getWall(){return wall;}
     
     bool getHaveSnakeHead(){return haveSnakeHead;}
     bool getHaveSnakeTail(){return haveSnakeTail;}
