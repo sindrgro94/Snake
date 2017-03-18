@@ -20,6 +20,9 @@
 // lagt til selv:
 #include "Board.hpp"
 #include "Drawing.hpp"
+#include "Info.hpp"
+#include "Menu.hpp"
+#include "Images.hpp"
 #include <cstdlib>
 #include <ctime>
 #include <iostream>
@@ -63,70 +66,67 @@ int main(){
     }
     sf::Text text("Hello SFML", font, 40);
     text.setColor(sf::Color::White);
-    /////////Loading images:////////////////////
-    //SnakeHead:
-    sf::Texture snakeHeadImage;
-    sf::Sprite snakeHead;
-    bool haveSnakeHead = true;
-    if(!snakeHeadImage.loadFromFile("snakeHead.png")){
-        cout<<"Could not load snake head image."<<endl;
-        haveSnakeHead = false;
-    }
-    snakeHead.setTexture(snakeHeadImage);
-    //SnakeTail:
-    sf::Texture snakeTailImage;
-    sf::Sprite snakeTail;
-    bool haveSnakeTail = true;
-    if(!snakeTailImage.loadFromFile("snakeTailTest.png")){
-        cout<<"Could not load snake tail image"<<endl;
-        haveSnakeTail = false;
-    }
-    snakeTail.setTexture(snakeTailImage);
-    //EndTail:
-    sf::Texture endTailImage;
-    sf::Sprite endTail;
-    bool haveEndTail = true;
-    if(!endTailImage.loadFromFile("endTailTest.png")){
-        cout<<"Could not load end tail image"<<endl;
-        haveEndTail = false;
-    }
-    endTail.setTexture(endTailImage);
-    //NormalFood:
-    sf::Texture normalFoodImage;
-    sf::Sprite normalFood;
-    bool haveNormalFood = true;
-    if(!normalFoodImage.loadFromFile("normalFoodTest.png")){
-        cout<<"Could not load normal food image"<<endl;
-        haveNormalFood = false;
-    }
-    normalFood.setTexture(normalFoodImage);
-    //SpecialFood:
-    sf::Texture specialFoodImage;
-    sf::Sprite specialFood;
-    bool haveSpecialFood = true;
-    if(!specialFoodImage.loadFromFile("specialFoodTest.png")){
-        cout<<"Could not load special food image"<<endl;
-        haveSpecialFood = false;
-    }
-    specialFood.setTexture(specialFoodImage);
-    //Wall:
-    sf::Texture wallImage;
-    sf::Sprite wall;
-    bool haveWall = true;
-    if(!wallImage.loadFromFile("wall.png")){
-        cout<<"Could not load wall image"<<endl;
-        haveWall = false;
-    }
-    wall.setTexture(wallImage);
-    
+    Info settings;
+    cout<<settings.addToHighscore("test", 2)<<endl;
+    settings.printHighscore();
+    settings.saveHighscore();
     ////////Defining variables:////////////////
+    Menu menu(WINDOW_WIDTH,WINDOW_HEIGHT,font);
+    Images sprites;
     sf::Clock clock;
     sf::Time time;
     list<Direction> moveQueue;
     int cornerColumn,cornerRow;
-    
+    bool inMainMenu = true;
     //start the game loop:
     while (window.isOpen()){
+        ////////Menu:////////////////
+        while (window.isOpen()&& inMainMenu) {
+            sf::Event event;
+            while (window.pollEvent(event)) {
+                switch (event.type) {
+                    case sf::Event::KeyReleased:
+                        switch (event.key.code) {
+                            case sf::Keyboard::Up:
+                                menu.MoveUp();
+                                break;
+                            case sf::Keyboard::Down:
+                                menu.MoveDown();
+                                break;
+                            case sf::Keyboard::Return:
+                                switch (menu.getPressedItem()) {
+                                    case 0:
+                                        inMainMenu = false;
+                                        break;
+                                    case 1:
+                                        //options
+                                        break;
+                                    case 2:
+                                        window.close();
+                                        break;
+                                    default:
+                                        break;
+                                }
+                            default:
+                                break;
+                        }
+                        break;
+                    case sf::Event::Closed:
+                        window.close();
+                        break;
+                        
+                    default:
+                        break;
+                }
+            }
+            window.clear();
+            sf::Sprite snakeHead = sprites.getSnakeHead();
+            snakeHead.setTextureRect(sf::IntRect(0,board.getSnakeHeadDirection()*SNAKE_SIZE,SNAKE_SIZE,SNAKE_SIZE));
+            snakeHead.setPosition(200, 200);
+            window.draw(snakeHead);
+            menu.draw(window);
+            window.display();
+        }
         
         ////////Game running:////////////////
         while(!board.didSnakeCollide(WINDOW_WIDTH, WINDOW_HEIGHT, INFO_BAR, EDGE_SIZE) && window.isOpen()){
@@ -163,11 +163,11 @@ int main(){
                 window.clear();
                 board.moveSnake(moveQueue);
                 ///////////////Drawing the snake:///////////////
-                drawSnakeHead(window,haveSnakeHead, board, snakeHead, snakeHead_color);
-                drawSnakeTail(window,haveSnakeTail,haveEndTail,board,snakeTail,endTail,snakeTail_color);
-                drawFood(window,haveNormalFood,haveSpecialFood, board, normalFood, specialFood,foodColor);
-                drawWall(window, haveWall, wall, WINDOW_WIDTH, WINDOW_HEIGHT, EDGE_SIZE, INFO_BAR);
-                drawInfoBar(window, haveNormalFood, haveSpecialFood, board, normalFood, specialFood, WINDOW_WIDTH, WINDOW_HEIGHT, EDGE_SIZE, INFO_BAR, font);
+                drawSnakeHead(window,sprites.getHaveSnakeHead(), board, sprites.getSnakeHead(), snakeHead_color);
+                drawSnakeTail(window,sprites.getHaveSnakeTail(),sprites.getHaveEndTail(),board,sprites.getSnakeTail(),sprites.getEndTail(),snakeTail_color);
+                drawFood(window,sprites.getHaveNormalFood(),sprites.getHaveSpecialFood(), board, sprites.getNormalFood(), sprites.getSpecialFood(),foodColor);
+                drawWall(window, sprites.getHaveWall(), sprites.getWall(), WINDOW_WIDTH, WINDOW_HEIGHT, EDGE_SIZE, INFO_BAR);
+                drawInfoBar(window, sprites.getHaveNormalFood(), sprites.getHaveSpecialFood(), board, sprites.getNormalFood(), sprites.getSpecialFood(), WINDOW_WIDTH, WINDOW_HEIGHT, EDGE_SIZE, INFO_BAR, font);
                 // Draw the string
                 //window.draw(text);
                              

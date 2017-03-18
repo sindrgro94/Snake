@@ -247,3 +247,9 @@ void drawInfoBar(sf::RenderWindow &window, bool haveNormalFood, bool haveSpecial
     text.setPosition(WINDOW_WIDTH-3*categorySize, WINDOW_HEIGHT-INFO_BAR/2);
     window.draw(text);
 }
+void drawText(sf::RenderWindow &window, int x, int y, string text, sf::Font font, int fontSize, sf::Color color){
+    sf::Text t(text, font, fontSize);
+    t.setColor(color);
+    t.setPosition(x, y);
+    window.draw(t);
+}
