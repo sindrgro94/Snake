@@ -1,4 +1,6 @@
-#pragma once
+//#pragma once
+#ifndef Snake_hpp
+#define Snake_hpp
 #include "BodyPart.hpp"
 #include <list>
 #include <utility>
@@ -44,4 +46,4 @@ public:
     void printSnakeStuff()const;
 };
 void printStuff(Food* food);
-
+#endif

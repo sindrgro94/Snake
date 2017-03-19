@@ -36,7 +36,6 @@ Menu::~Menu(){
 
 void Menu::draw(sf::RenderWindow &window){
     for (int i = 0; i<MAX_NUMBER_OF_ITEMS; i++) {
-        std::cout<<i<<std::endl;
         window.draw(menu[i]);
     }
 }

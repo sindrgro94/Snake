@@ -20,8 +20,8 @@
 // lagt til selv:
 #include "Board.hpp"
 #include "Drawing.hpp"
-#include "Info.hpp"
 #include "Menu.hpp"
+#include "Info.hpp"
 #include <cstdlib>
 #include <ctime>
 #include <iostream>
@@ -65,12 +65,10 @@ int main(){
     }
     sf::Text text("Hello SFML", font, 40);
     text.setColor(sf::Color::White);
-    Info settings;
-    cout<<settings.addToHighscore("test", 2)<<endl;
-    settings.printHighscore();
-    settings.saveHighscore();
     ////////Defining variables:////////////////
     Menu menu(WINDOW_WIDTH,WINDOW_HEIGHT,font);
+    Info settings;
+    settings.printHighscore();
     Images sprites;
     sf::Clock clock;
     sf::Time time;
@@ -80,6 +78,7 @@ int main(){
     //start the game loop:
     while (window.isOpen()){
         ////////Menu:////////////////
+        inMainMenu = true;
         while (window.isOpen()&& inMainMenu) {
             sf::Event event;
             while (window.pollEvent(event)) {
@@ -101,7 +100,7 @@ int main(){
                                         //options
                                         break;
                                     case 2:
-                                        //highscore
+                                        settings.drawHighscore(window, font, WINDOW_WIDTH, WINDOW_HEIGHT);
                                         break;
                                     case 3:
                                         window.close();
@@ -176,7 +175,6 @@ int main(){
             }
 
         }
-        window.close();
     }
     
     return EXIT_SUCCESS;

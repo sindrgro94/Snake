@@ -1,4 +1,6 @@
-#pragma once
+//#pragma once
+#ifndef BodyPart_hpp
+#define BodyPart_hpp
 #include "Food.hpp"
 #include <list>
 #include <utility>
@@ -24,3 +26,5 @@ public:
     void changeDir(pair<Direction,Direction> dir){_dir = dir;}
     
 };
+
+#endif

@@ -1,4 +1,6 @@
-#pragma once
+//#pragma once
+#ifndef Menu_hpp
+#define Menu_hpp
 #include "SFML/Graphics.hpp"
 
 #define MAX_NUMBER_OF_ITEMS 4
@@ -17,3 +19,5 @@ public:
     void MoveDown();
     int getPressedItem(){return selectedItemIndex;}
 };
+
+#endif

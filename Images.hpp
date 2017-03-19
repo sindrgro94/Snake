@@ -1,4 +1,6 @@
-#pragma once
+//#pragma once
+#ifndef Images_hpp
+#define Images_hpp
 #include "SFML/Graphics.hpp"
 class Images{
 private:
@@ -40,3 +42,4 @@ public:
     bool getHaveWall(){return haveWall;}
 
 };
+#endif

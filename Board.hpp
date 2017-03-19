@@ -1,4 +1,6 @@
-#pragma once
+//#pragma once
+#ifndef Board_hpp
+#define Board_hpp
 #include "Snake.hpp"
 #include <list>
 #include <utility>
@@ -32,3 +34,5 @@ public:
     
     
 };
+
+#endif

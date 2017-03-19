@@ -1,4 +1,6 @@
-#pragma once
+//#pragma once
+#ifndef Food_hpp
+#define Food_hpp
 #include "Enum.hpp"
 #include <list>
 #include <utility>
@@ -48,3 +50,5 @@ public:
     virtual Direction getDir(){return dir;}
     virtual void moveFood();
 };
+
+#endif
