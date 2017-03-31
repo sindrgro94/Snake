@@ -75,11 +75,12 @@ int main(){
     list<Direction> moveQueue;
     int cornerColumn,cornerRow;
     bool inMainMenu = true;
+    string userName;
     //start the game loop:
     while (window.isOpen()){
         ////////Menu:////////////////
         inMainMenu = true;
-        while (window.isOpen()&& inMainMenu) {
+        while (window.isOpen() && inMainMenu) {
             sf::Event event;
             while (window.pollEvent(event)) {
                 switch (event.type) {
@@ -115,12 +116,22 @@ int main(){
                     case sf::Event::Closed:
                         window.close();
                         break;
-                        
+                    case sf::Event::TextEntered:
+                        if (event.text.unicode == 8 && userName.size() != 0){
+                            userName.pop_back();
+                        }
+                        else if(event.text.unicode < 128){
+                            userName.push_back(static_cast<char>(event.text.unicode));
+                        }
+                        break;
                     default:
                         break;
                 }
             }
             window.clear();
+            text.setString(userName);
+            text.setPosition(100, 100);
+            window.draw(text);
             menu.draw(window);
             window.display();
         }
