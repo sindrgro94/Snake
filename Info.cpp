@@ -66,22 +66,20 @@ void Info::saveHighscore(){
         cout<<"Failed saving highscore file"<<endl;
         exit(1);
     }
+    print();
     auto it = highscoreEasy.begin();
     output<<it->first<<" & "<<it->second;
-    //cout<<it->first<<endl<<it->second<<endl;
     for(; it != highscoreEasy.end(); it++){
         output<<endl<<it->first<<" & "<<it->second;
-        //cout<<it->first<<endl<<it->second<<endl;
     }
     for(it = highscoreMedium.begin(); it != highscoreMedium.end(); it++){
         output<<endl<<it->first<<" & "<<it->second;
-        //cout<<it->first<<endl<<it->second<<endl;
     }
     for(it = highscoreHard.begin(); it != highscoreHard.end(); it++){
         output<<endl<<it->first<<" & "<<it->second;
-        //cout<<it->first<<endl<<it->second<<endl;
     }
     output.close();
+    print();
 }
 
 int Info::addToHighscore(string name, int score){
