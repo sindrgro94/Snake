@@ -6,11 +6,16 @@
 using namespace std;
 
 /////////////////BOARD////////////////////////////
-Board::Board(int boardWidth,int boardHeight,int snakeSize, int infoBarSize, int edgeSize) :width(boardWidth),height(boardHeight),infoBarSize(infoBarSize),edgeSize(edgeSize){
+Board::Board(int boardWidth,int boardHeight,int snakeSize, int infoBarSize, int edgeSize) :width(boardWidth),height(boardHeight),infoBarSize(infoBarSize),edgeSize(edgeSize),snakeSize(snakeSize){
     snake = new Snake(snakeSize, 1);
     this->placeFood(snakeSize,false);
 }
-
+void Board::reset(){
+    delete snake;
+    snake = new Snake(snakeSize,1);
+    food.clear();
+    this->placeFood(snakeSize, false);
+}
 /////////////////FOOD////////////////////////////
 void Board::placeFood(int size, bool specialFood){
     Food* newFood;

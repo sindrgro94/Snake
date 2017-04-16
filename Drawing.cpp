@@ -245,6 +245,7 @@ void drawInfoBar(sf::RenderWindow &window, Board board, Images sprites, int WIND
         specialFood.setPosition(WINDOW_WIDTH-categorySize, WINDOW_HEIGHT-INFO_BAR/2);
         window.draw(specialFood);
     }
+    // SCORE:
     text.setString("Score:");
     text.setPosition(WINDOW_WIDTH-3*categorySize, WINDOW_HEIGHT-INFO_BAR+5);
     window.draw(text);
@@ -253,6 +254,11 @@ void drawInfoBar(sf::RenderWindow &window, Board board, Images sprites, int WIND
     score += " points";
     text.setString(score);
     text.setPosition(WINDOW_WIDTH-3*categorySize, WINDOW_HEIGHT-INFO_BAR/2);
+    window.draw(text);
+    //NAME:
+    text.setString("Player name: " + board.getPlayerName());
+    text.setCharacterSize(INFO_BAR/2);
+    text.setPosition(20, WINDOW_HEIGHT-INFO_BAR/1.1);
     window.draw(text);
 }
 void drawText(sf::RenderWindow &window, int x, int y, string text, sf::Font font, int fontSize, sf::Color color){

@@ -11,6 +11,7 @@ class Board{
 private:
     int width,height;
     int infoBarSize,edgeSize;
+    int snakeSize;
     Snake* snake;
     list<Food*> food;
 public:
@@ -27,12 +28,14 @@ public:
     Direction getSnakeHeadDirection(){return snake->getSnakeHeadDirection();}
     int getSnakeSize(){return snake->getSnakeSize();}
     int getSnakePoints();
+    string getPlayerName(){return snake->getPlayerName();}
     ///
     bool didSnakeCollide(int width,int height, int infoBar, int edgeSize){return snake->didSnakeCollide(width, height, infoBar, edgeSize);}
     void moveSnake(list<Direction> &moveQueue);
     void didSnakeEat();
-    
-    
+    //SetFunctions:
+    void setPlayerName(string name){snake->setPlayerName(name);}
+    void reset();
 };
 
 #endif

@@ -26,10 +26,17 @@ Info::Info():difficulty(MEDIUM){
             counter++;
             stringstream ss(line);
             name = "";
+            bool first = true;
             bool score = false;
             while(ss>>word){
                 if (word!="&" && !score){
-                    name+=word +" ";
+                    if (first){
+                        name += word;
+                        first = false;
+                    }
+                    else{
+                        name+=" " + word;
+                    }
                 }
                 else if(word=="&"){
                     score = true;
@@ -54,32 +61,32 @@ Info::Info():difficulty(MEDIUM){
 
 void Info::saveHighscore(){
     ofstream output;
-    output.open("/Users/SindreGrostad/Documents/cpp/Spill/Snake/Snake/Snake/highscore_backup.txt");
+    output.open("/Users/SindreGrostad/Documents/cpp/Spill/Snake/Snake/Snake/highscore.txt");
     if (output.fail()){
         cout<<"Failed saving highscore file"<<endl;
         exit(1);
     }
-    string line;
     auto it = highscoreEasy.begin();
-    output<<it->first<<"& "<<it->second;
+    output<<it->first<<" & "<<it->second;
+    //cout<<it->first<<endl<<it->second<<endl;
     for(; it != highscoreEasy.end(); it++){
-        output<<endl<<it->first<<"& "<<it->second;
+        output<<endl<<it->first<<" & "<<it->second;
+        //cout<<it->first<<endl<<it->second<<endl;
     }
-    it = highscoreMedium.begin();
-    output<<it->first<<"& "<<it->second;
-    for(; it != highscoreMedium.end(); it++){
-        output<<endl<<it->first<<"& "<<it->second;
+    for(it = highscoreMedium.begin(); it != highscoreMedium.end(); it++){
+        output<<endl<<it->first<<" & "<<it->second;
+        //cout<<it->first<<endl<<it->second<<endl;
     }
-    it = highscoreHard.begin();
-    output<<it->first<<"& "<<it->second;
-    for(; it != highscoreHard.end(); it++){
-        output<<endl<<it->first<<"& "<<it->second;
+    for(it = highscoreHard.begin(); it != highscoreHard.end(); it++){
+        output<<endl<<it->first<<" & "<<it->second;
+        //cout<<it->first<<endl<<it->second<<endl;
     }
+    output.close();
 }
 
-int Info::addToHighscore(string name, int score, Level level){
+int Info::addToHighscore(string name, int score){
     int place = 1;
-    switch (level) {
+    switch (difficulty) {
         case HARD:
             for(auto it = highscoreHard.begin(); it!= highscoreHard.end(); it++){
                 if(it->second<=score){
@@ -112,6 +119,7 @@ int Info::addToHighscore(string name, int score, Level level){
             }
             break;
     }
+    this->saveHighscore();
     return 0;
 }
 
@@ -273,8 +281,8 @@ void Info::drawHighscore(sf::RenderWindow &window, sf::Font font, int width, int
         while(window.pollEvent(event)){
             switch (event.type) {
                     case sf::Event::KeyReleased:
-                    inHighscore = false;
-                    break;
+                        inHighscore = false;
+                        break;
             }
             
         }
@@ -290,4 +298,19 @@ void drawText2(sf::RenderWindow &window, int x, int y, string text, sf::Font fon
     }
     t.setPosition(x, y);
     window.draw(t);
+}
+
+void Info::print(){
+    cout<<"EASY:"<<endl;
+    for(auto it = highscoreEasy.begin(); it != highscoreEasy.end(); it++){
+        cout<<it->first<<" - " << it->second<<endl;
+    }
+    cout<<"MEDIUM:"<<endl;
+    for(auto it = highscoreMedium.begin(); it != highscoreMedium.end(); it++){
+        cout<<it->first<<" - " << it->second<<endl;
+    }
+    cout<<"HARD:"<<endl;
+    for(auto it = highscoreHard.begin(); it != highscoreHard.end(); it++){
+        cout<<it->first<<" - " << it->second<<endl;
+    }
 }

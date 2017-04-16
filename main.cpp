@@ -63,29 +63,28 @@ int main(){
     if (!font.loadFromFile("angrybirds-regular.ttf")) {
         return EXIT_FAILURE;
     }
-    sf::Text text("Hello SFML", font, 40);
-    text.setColor(sf::Color::White);
     ////////Defining variables:////////////////
-    Menu menu(WINDOW_WIDTH,WINDOW_HEIGHT,font);
     Info settings;
-    settings.printHighscore();
+    Menu menu(WINDOW_WIDTH,WINDOW_HEIGHT,font, &settings);
     Images sprites;
     sf::Clock clock;
     sf::Time time;
     list<Direction> moveQueue;
     int cornerColumn,cornerRow;
     bool inMainMenu = true;
-    string userName;
     //start the game loop:
     while (window.isOpen()){
         ////////Menu:////////////////
         inMainMenu = true;
         while (window.isOpen() && inMainMenu) {
             sf::Event event;
-            while (window.pollEvent(event)) {
+            while (window.pollEvent(event) && window.isOpen()) {
                 switch (event.type) {
                     case sf::Event::KeyReleased:
                         switch (event.key.code) {
+                            case sf::Keyboard::Escape:
+                                window.close();
+                            /*
                             case sf::Keyboard::Up:
                                 menu.MoveUp();
                                 break;
@@ -108,38 +107,123 @@ int main(){
                                         break;
                                     default:
                                         break;
-                                }
+                                }*/
                             default:
                                 break;
                         }
                         break;
+                    case sf::Event::MouseMoved:
+                        menu.setColor();
+                        break;
+                    case sf::Event::MouseButtonReleased:
+                            switch (menu.getPressedItem2()){
+                                case 0:
+                                    inMainMenu = false;
+                                    break;
+                                case 1:
+                                    //nothing
+                                    break;
+                                case 2:
+                                    settings.drawHighscore(window, font, WINDOW_WIDTH, WINDOW_HEIGHT);
+                                    break;
+                                case 3:
+                                    window.close();
+                                    break;
+                                case 4:
+                                    settings.setDifficulty(EASY);
+                                    break;
+                                case 5:
+                                    settings.setDifficulty(MEDIUM);
+                                    break;
+                                case 6:
+                                    settings.setDifficulty(HARD);
+                                    break;
+                                default:
+                                    break;
+                            }
+                        break;
                     case sf::Event::Closed:
                         window.close();
-                        break;
-                    case sf::Event::TextEntered:
-                        if (event.text.unicode == 8 && userName.size() != 0){
-                            userName.pop_back();
-                        }
-                        else if(event.text.unicode < 128){
-                            userName.push_back(static_cast<char>(event.text.unicode));
-                        }
                         break;
                     default:
                         break;
                 }
             }
             window.clear();
-            text.setString(userName);
-            text.setPosition(100, 100);
-            window.draw(text);
             menu.draw(window);
             window.display();
         }
+        ////////Input name:////////////////
+        int textSize = 60;
+        bool nameSaved = false;
+        sf::Text info("Write your name(max 30 letters):",font,textSize);
+        info.setColor(sf::Color::Red);
+        info.setPosition(WINDOW_WIDTH/6, WINDOW_HEIGHT/2);
+        sf::FloatRect infoBoundary = info.getGlobalBounds();
         
+        sf::Text name("",font,textSize);
+        sf::String userName;
+        name.setPosition(infoBoundary.left + infoBoundary.width + 40, infoBoundary.top-infoBoundary.height/4);
+        
+        sf::Text startText("Start game",font,textSize*1.5);
+        sf::FloatRect startB = startText.getGlobalBounds();
+        startText.setPosition(infoBoundary.left + (infoBoundary.width+startB.width)/2,infoBoundary.top + 3*infoBoundary.height);
+        startB = startText.getGlobalBounds();
+        sf::FloatRect startSize(startText.getGlobalBounds());
+        while(!nameSaved && window.isOpen()){
+            sf::Event event;
+            while (window.pollEvent(event) && window.isOpen()){
+                switch (event.type){
+                    case sf::Event::Closed:
+                        window.close();
+                        break;
+                    case sf::Event::KeyReleased:
+                        switch (event.key.code){
+                            case sf::Keyboard::Return:
+                                nameSaved = true;
+                                break;
+                            case sf::Keyboard::Escape:
+                                window.close();
+                            case sf::Keyboard::BackSpace:
+                                userName.clear();
+                            default:
+                                break;
+                        }
+                    case sf::Event::MouseButtonReleased:
+                        if (startSize.contains(event.mouseButton.x,event.mouseButton.y)){
+                            nameSaved = true;
+                        }
+                        break;
+                    default:
+                        break;
+                }
+                if (event.type == sf::Event::TextEntered && userName.getSize()<18){
+                    userName.insert(userName.getSize(),event.text.unicode);
+                }
+            }
+            window.clear();
+            window.draw(info);
+            name.setString(userName);
+            window.draw(name);
+            if (startSize.contains(static_cast<sf::Vector2f>(sf::Mouse::getPosition()))){
+                startText.setColor(sf::Color::Red);
+            }
+            else{
+                startText.setColor(sf::Color::White);
+            }
+            drawSnakeHead(window,board, sprites, snakeHead_color);
+            drawSnakeTail(window,board,sprites,snakeTail_color);
+            drawWall(window, sprites, WINDOW_WIDTH, WINDOW_HEIGHT, EDGE_SIZE, INFO_BAR);
+            drawInfoBar(window, board, sprites, WINDOW_WIDTH, WINDOW_HEIGHT, EDGE_SIZE, INFO_BAR, font);
+            
+            window.draw(startText);
+            window.display();
+        }
+        board.setPlayerName(userName);
         ////////Game running:////////////////
         while(!board.didSnakeCollide(WINDOW_WIDTH, WINDOW_HEIGHT, INFO_BAR, EDGE_SIZE) && window.isOpen()){
             sf::Event event;
-            while (window.pollEvent(event)){
+            while (window.pollEvent(event) && window.isOpen()){
                 switch(event.type){
                     case sf::Event::Closed:
                         window.close();
@@ -176,16 +260,14 @@ int main(){
                 drawFood(window, board, sprites,foodColor);
                 drawWall(window, sprites, WINDOW_WIDTH, WINDOW_HEIGHT, EDGE_SIZE, INFO_BAR);
                 drawInfoBar(window, board, sprites, WINDOW_WIDTH, WINDOW_HEIGHT, EDGE_SIZE, INFO_BAR, font);
-                // Draw the string
-                //window.draw(text);
-                             
-
-                
+ 
                 // Update the window
                 window.display();
             }
 
         }
+        settings.addToHighscore(board.getPlayerName(), board.getSnakePoints());
+        board.reset();
     }
     
     return EXIT_SUCCESS;
