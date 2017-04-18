@@ -48,6 +48,9 @@ const sf::Color foodColor = sf::Color::Blue;
 const int SNAKE_SIZE = 50;
 const int EDGE_SIZE = 50;
 const int INFO_BAR = 140;
+const int EASY_SPEED = 180;
+const int MEDIUM_SPEED = 130;
+const int HARD_SPEED = 90;
 int main(){
     srand(time(nullptr));
     vector<sf::VideoMode> modes = sf::VideoMode::getFullscreenModes();
@@ -76,6 +79,7 @@ int main(){
     while (window.isOpen()){
         ////////Menu:////////////////
         inMainMenu = true;
+        sf::Sprite menuBackground = getMenuBackground(window, sprites);
         while (window.isOpen() && inMainMenu) {
             sf::Event event;
             while (window.pollEvent(event) && window.isOpen()) {
@@ -151,12 +155,13 @@ int main(){
             }
             window.clear();
             menu.draw(window);
+            window.draw(menuBackground);
             window.display();
         }
         ////////Input name:////////////////
         int textSize = 60;
         bool nameSaved = false;
-        sf::Text info("Write your name(max 30 letters):",font,textSize);
+        sf::Text info("Write your name:",font,textSize);
         info.setColor(sf::Color::Red);
         info.setPosition(WINDOW_WIDTH/6, WINDOW_HEIGHT/2);
         sf::FloatRect infoBoundary = info.getGlobalBounds();
@@ -180,7 +185,8 @@ int main(){
                     case sf::Event::KeyReleased:
                         switch (event.key.code){
                             case sf::Keyboard::Return:
-                                nameSaved = true;
+                                if (userName.getSize()>0)
+                                    nameSaved = true;
                                 break;
                             case sf::Keyboard::Escape:
                                 window.close();
@@ -190,14 +196,14 @@ int main(){
                                 break;
                         }
                     case sf::Event::MouseButtonReleased:
-                        if (startSize.contains(event.mouseButton.x,event.mouseButton.y)){
+                        if (startSize.contains(event.mouseButton.x,event.mouseButton.y) && userName.getSize()>0){
                             nameSaved = true;
                         }
                         break;
                     default:
                         break;
                 }
-                if (event.type == sf::Event::TextEntered && userName.getSize()<18){
+                if (event.type == sf::Event::TextEntered && userName.getSize()<18 && event.text.unicode != 10){
                     userName.insert(userName.getSize(),event.text.unicode);
                 }
             }
@@ -221,6 +227,18 @@ int main(){
         }
         board.setPlayerName(userName);
         ////////Game running:////////////////
+        int gameSpeed;
+        switch (settings.getDifficulty()) {
+            case EASY:
+                gameSpeed = EASY_SPEED;
+                break;
+            case MEDIUM:
+                gameSpeed = MEDIUM_SPEED;
+                break;
+            default:
+                gameSpeed = HARD_SPEED;
+                break;
+        }
         while(!board.didSnakeCollide(WINDOW_WIDTH, WINDOW_HEIGHT, INFO_BAR, EDGE_SIZE) && window.isOpen()){
             sf::Event event;
             while (window.pollEvent(event) && window.isOpen()){
@@ -249,7 +267,7 @@ int main(){
                 }
             }
             time = clock.getElapsedTime();
-            if(time.asMilliseconds()>=150){
+            if(time.asMilliseconds()>=gameSpeed){
                 clock.restart();
                 ///////////////Clear screen///////////////
                 window.clear();
@@ -266,8 +284,29 @@ int main(){
             }
 
         }
-        settings.addToHighscore(board.getPlayerName(), board.getSnakePoints());
+        int place = settings.addToHighscore(board.getPlayerName(), board.getSnakePoints());
+        string message;
+        switch(place){
+            case 0:
+                message = "Unfortunately, you did not make it to the highscore list.";
+                break;
+            case 1:
+                message = "Congratulations, you beat the highscore!";
+                break;
+            default:
+                message = "Congratuations, you made it to the highscore list!";
+                break;
+        }
+        
+        clock.restart();
+        time = clock.getElapsedTime();
+        drawText2(window, WINDOW_WIDTH/2, WINDOW_HEIGHT/2, message, font, 100, sf::Color::Red, true);
+        window.display();
+        while (time.asSeconds()<4) {
+            time = clock.getElapsedTime();
+        }
         board.reset();
+        settings.drawHighscore(window, font, WINDOW_WIDTH, WINDOW_HEIGHT);
     }
     
     return EXIT_SUCCESS;

@@ -267,3 +267,9 @@ void drawText(sf::RenderWindow &window, int x, int y, string text, sf::Font font
     t.setPosition(x, y);
     window.draw(t);
 }
+
+sf::Sprite getMenuBackground(sf::RenderWindow &window, Images sprites){
+    sf::Sprite menuBackground;
+    
+    return menuBackground;
+}

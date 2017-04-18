@@ -66,20 +66,27 @@ void Info::saveHighscore(){
         cout<<"Failed saving highscore file"<<endl;
         exit(1);
     }
-    print();
     auto it = highscoreEasy.begin();
-    output<<it->first<<" & "<<it->second;
-    for(; it != highscoreEasy.end(); it++){
-        output<<endl<<it->first<<" & "<<it->second;
+    string out = "";
+    out += it->first + " & " + to_string(it->second);
+    output<<out;
+    it++;
+    for(; it != highscoreEasy.end(); ++it){
+        out.clear();
+        out += it->first + " & " + to_string(it->second);
+        output<<endl<<out;
     }
     for(it = highscoreMedium.begin(); it != highscoreMedium.end(); it++){
-        output<<endl<<it->first<<" & "<<it->second;
+        out.clear();
+        out += it->first + " & " + to_string(it->second);
+        output<<endl<<out;
     }
     for(it = highscoreHard.begin(); it != highscoreHard.end(); it++){
-        output<<endl<<it->first<<" & "<<it->second;
+        out.clear();
+        out += it->first + " & " + to_string(it->second);
+        output<<endl<<out;
     }
     output.close();
-    print();
 }
 
 int Info::addToHighscore(string name, int score){
@@ -110,7 +117,7 @@ int Info::addToHighscore(string name, int score){
             for(auto it = highscoreEasy.begin(); it!= highscoreEasy.end(); it++){
                 if(it->second<=score){
                     highscoreEasy.insert(it, make_pair(name,score));
-                    highscoreMedium.pop_back();
+                    highscoreEasy.pop_back();
                     return place;
                 }
                 place++;
@@ -186,7 +193,6 @@ void Info::printHighscore(){
 
 void Info::drawHighscore(sf::RenderWindow &window, sf::Font font, int width, int height){
     bool inHighscore = true;
-    while(window.isOpen() && inHighscore){
         sf::Event event;
         window.clear();
         int col = width/6-10;
@@ -275,12 +281,39 @@ void Info::drawHighscore(sf::RenderWindow &window, sf::Font font, int width, int
                 drawText2(window, 4*col+32, row*4+row/1.5*i,"I",font,listSize, sf::Color::Red,false);
             }
         }
+    sf::Image HighscoreList = window.capture();
+    sf::Texture highscoreTexture;
+    highscoreTexture.loadFromImage(HighscoreList);
+    sf::Sprite highscore;
+    highscore.setTexture(highscoreTexture);
+    while(window.isOpen() && inHighscore){
+        sf::Text exit("Back",font,150);
+        exit.setPosition(20, 20);
+        sf::FloatRect boundary = exit.getGlobalBounds();
+        if(boundary.contains(static_cast<sf::Vector2f>(sf::Mouse::getPosition()))){
+            exit.setColor(sf::Color::Red);
+        }
+        else{
+            exit.setColor(sf::Color::White);
+        }
+        window.clear();
+        window.draw(highscore);
+        window.draw(exit);
         window.display();
         while(window.pollEvent(event)){
             switch (event.type) {
-                    case sf::Event::KeyReleased:
+                case sf::Event::KeyReleased:
+                    if (event.key.code == sf::Keyboard::Escape){
                         inHighscore = false;
-                        break;
+                    }
+                    break;
+                case sf::Event::MouseButtonReleased:
+                    if (boundary.contains(event.mouseButton.x, event.mouseButton.y)){
+                        inHighscore = false;
+                    }
+                    break;
+                default:
+                    break;
             }
             
         }

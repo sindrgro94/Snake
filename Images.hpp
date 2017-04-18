@@ -40,6 +40,7 @@ public:
     bool getHaveNormalFood(){return haveNormalFood;}
     bool getHaveSpecialFood(){return haveSpecialFood;}
     bool getHaveWall(){return haveWall;}
+    
 
 };
 #endif

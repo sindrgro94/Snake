@@ -1,32 +1,30 @@
-s & 2
-s & 2
-Number 1 & 1
-Number 1 & 1
-Number 2 & 1
-Number 3 & 1
-Number 4 & 1
-Number 5 & 1
-Number 6 & 1
-Number 7 & 1
-Number 8 & 1
-Number 9 & 1
-Number 10 & 1
-test & 2
-Number 1 & 1
-Number 2 & 1
-Number 3 & 1
-Number 4 & 1
-Number 5 & 1
-Number 6 & 1
-Number 7 & 1
-Number 9 & 1
-Number 1 & 1
-Number 2 & 1
-Number 3 & 1
-Number 4 & 1
-Number 5 & 1
-Number 6 & 1
-Number 7 & 1
-Number 8 & 1
-Number 9 & 1
-Number 10 & 1
+Sindre & 21
+Sindre & 12
+Sindre & 1
+Sindre & 1
+Sindre & 1
+Sindre & 1
+Sindre & 1
+Sindre & 1
+Sindre & 1
+Sindre & 1
+Sindre & 42
+Sindre & 26
+Sindre & 20
+Sindre & 12
+Sindre & 12
+Sindre & 9
+Sindre & 6
+Sindre & 5
+Sindre & 5
+Sindre & 4
+Sindre & 55
+Sindre & 52
+Sindre & 18
+Sindre & 12
+Sindre & 11
+Sindre & 1
+Sindre & 1
+Sindre & 1
+Sindre & 1
+Sindre & 1
