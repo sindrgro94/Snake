@@ -197,7 +197,7 @@ void Board::didSnakeEat(){
     }
     if(!specialFoodExist){
         int newSpecialFood = rand()%100;
-        if (newSpecialFood<20){//number represents percent chance for special food
+        if (newSpecialFood<100){//number represents percent chance for special food
             this->placeFood(snake->getSnakeSize(), true);
         }
     }

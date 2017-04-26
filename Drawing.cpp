@@ -268,8 +268,101 @@ void drawText(sf::RenderWindow &window, int x, int y, string text, sf::Font font
     window.draw(t);
 }
 
-sf::Sprite getMenuBackground(sf::RenderWindow &window, Images sprites){
-    sf::Sprite menuBackground;
+sf::Texture getMenuBackground(sf::RenderWindow &window, Images sprites){
+    int snakeSize = 50;
+    window.clear();
     
-    return menuBackground;
+    sf::Sprite endTail = sprites.getEndTail();
+    endTail.setPosition(50,50);
+    endTail.setTextureRect(sf::IntRect(0,0,snakeSize,snakeSize));
+    window.draw(endTail);
+    
+    sf::Sprite snakeTail = sprites.getSnakeTail();
+    snakeTail.setPosition(50,50);
+    
+    int widthlen = 22;
+    int width[widthlen];
+    for (int i = 0; i<widthlen; i++){
+        width[i] = 100+50*i;
+    }
+    int heightlen = 30;
+    int height[heightlen];
+    for (int i = 0; i<heightlen; i++){
+        height[i] = 50+50*i;
+    }
+    int xref[8] = {0,2,0,1,0,1,0,2};
+    int yref[8] = {0,0,2,0,1,1,2,2};
+    //drawing:
+    int xBegin = 0;
+    int xEnd = widthlen-1;
+    int yBegin = 0;
+    int yEnd = heightlen-1;
+    bool first = true;
+    bool goVertical = false;
+    bool onTop = true;
+    bool onRight = true;
+    for(int rounds = 0; rounds < 2; rounds++){
+        for(int dir = 0; dir<8; dir++){
+            snakeTail.setTextureRect(sf::IntRect(xref[dir]*snakeSize,yref[dir]*snakeSize,snakeSize,snakeSize));
+            if(goVertical){
+                int x;
+                if (onRight){
+                    x = xEnd;
+                }
+                else{
+                    x = xBegin;
+                }
+                for(int y = yBegin; y<yEnd; y++){
+                    snakeTail.setPosition(width[x], height[y]);
+                    window.draw(snakeTail);
+                }
+                dir++;
+                snakeTail.setTextureRect(sf::IntRect(xref[dir]*snakeSize,yref[dir]*snakeSize,snakeSize,snakeSize));
+                if(onRight){
+                    yBegin+=2;
+                }
+                else{
+                    yEnd-=2;
+                }
+                onRight = !onRight;
+                goVertical = !goVertical;
+            }
+            else{
+                int y;
+                if(onTop){
+                    y = yBegin;
+                }
+                else{
+                    y = yEnd;
+                }
+                for(int x = xBegin; x<xEnd; x++){
+                    snakeTail.setPosition(width[x], height[y]);
+                    window.draw(snakeTail);
+                }
+                dir++;
+                snakeTail.setTextureRect(sf::IntRect(xref[dir]*snakeSize,yref[dir]*snakeSize,snakeSize,snakeSize));
+                if (onTop){
+                    xBegin+=2;
+                    if (first){
+                        xBegin-=2;
+                        first = false;
+                    }
+                    
+                }
+                else{
+                    xEnd-=2;
+                }
+                onTop = !onTop;
+                goVertical = !goVertical;
+            }
+            if (rounds == 0){
+                xBegin++;
+            }
+        }
+    }
+    sf::Image menuImage = window.capture();
+    sf::Texture image;
+    image.loadFromImage(menuImage);
+    window.clear();
+    return image;
 }

@@ -79,7 +79,10 @@ int main(){
     while (window.isOpen()){
         ////////Menu:////////////////
         inMainMenu = true;
-        sf::Sprite menuBackground = getMenuBackground(window, sprites);
+        sf::Texture image = getMenuBackground(window, sprites);
+        sf::Sprite menuBackground;
+        menuBackground.setTexture(image);
+        
         while (window.isOpen() && inMainMenu) {
             sf::Event event;
             while (window.pollEvent(event) && window.isOpen()) {
@@ -154,8 +157,9 @@ int main(){
                 }
             }
             window.clear();
-            menu.draw(window);
             window.draw(menuBackground);
+            menu.draw(window);
+            
             window.display();
         }
         ////////Input name:////////////////
